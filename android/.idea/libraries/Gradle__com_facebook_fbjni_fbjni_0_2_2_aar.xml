@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.facebook.fbjni:fbjni:0.2.2@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/20b960bfe5cbbb97b86a2cad3e455238/transformed/jetified-fbjni-0.2.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/20b960bfe5cbbb97b86a2cad3e455238/transformed/jetified-fbjni-0.2.2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/20b960bfe5cbbb97b86a2cad3e455238/transformed/jetified-fbjni-0.2.2/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fbjni/fbjni/0.2.2/8f905816b7396cc8b01938155fad6fae1dfaa387/fbjni-0.2.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fbjni/fbjni/0.2.2/625833cd4ec56d51b241c76f0061ae312a80c3f1/fbjni-0.2.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

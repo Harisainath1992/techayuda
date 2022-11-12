@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id=":expo-font:unitTest" external.linked.project.path="$MODULE_DIR$/../../../../node_modules/expo-font/android" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.type="sourceSet" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="kotlin-language" name="Kotlin">
+      <configuration version="4" platform="JVM 11" allPlatforms="JVM [11]" useProjectSettings="false">
+        <compilerSettings>
+          <option name="additionalArguments" value="-Xallow-no-source-files" />
+        </compilerSettings>
+        <compilerArguments>
+          <option name="destination" value="$MODULE_DIR$/../../../../node_modules/expo-font/android/build/tmp/kotlin-classes/debugUnitTest" />
+          <option name="classpath" value="$MODULE_DIR$/../../../../node_modules/expo-font/android/build/intermediates/compile_library_classes_jar/debug/classes.jar;C:/Users/Sainath/.gradle/caches/transforms-3/5d5c005847cf8de15717b495cdeb2994/transformed/jetified-kotlin-stdlib-jdk7-1.6.10.jar;C:/Users/Sainath/.gradle/caches/transforms-3/b4bd8b2d8b84f89e1b1eb3315da16eb4/transformed/jetified-kotlin-stdlib-1.6.10.jar;C:/Users/Sainath/.gradle/caches/transforms-3/eacbcb3917c544186f532dad16d94476/transformed/jetified-annotations-13.0.jar;C:/Users/Sainath/.gradle/caches/transforms-3/fef35b89e5e15dc545425cdee6369ba0/transformed/jetified-kotlin-stdlib-common-1.6.10.jar;D:/old/xampp/xampp/htdocs/win/node_modules/expo-modules-core/android/build/intermediates/compile_library_classes_jar/debug/classes.jar;C:/Users/Sainath/AppData/Local/Android/Sdk/platforms/android-31/android.jar;C:/Users/Sainath/AppData/Local/Android/Sdk/build-tools/30.0.3/core-lambda-stubs.jar" />
+          <option name="noStdlib" value="true" />
+          <option name="moduleName" value="expo-font_debug" />
+          <option name="jvmTarget" value="11" />
+          <option name="friendPaths">
+            <array>
+              <option value="$MODULE_DIR$/../../../../node_modules/expo-font/android/build/tmp/kotlin-classes/debug" />
+              <option value="$MODULE_DIR$/../../../../node_modules/expo-font/android/build/intermediates/javac/debug/classes" />
+              <option value="$MODULE_DIR$/../../../../node_modules/expo-font/android/build/intermediates/compile_library_classes_jar/debug/classes.jar" />
+            </array>
+          </option>
+          <option name="languageVersion" value="1.6" />
+          <option name="apiVersion" value="1.6" />
+          <option name="pluginOptions">
+            <array />
+          </option>
+          <option name="pluginClasspaths">
+            <array />
+          </option>
+          <option name="errors">
+            <ArgumentParseErrors />
+          </option>
+        </compilerArguments>
+      </configuration>
+    </facet>
+    <facet type="android" name="Android">
+      <configuration>
+        <option name="SELECTED_BUILD_VARIANT" value="debug" />
+        <option name="ASSEMBLE_TASK_NAME" value="assembleDebug" />
+        <option name="COMPILE_JAVA_TASK_NAME" value="compileDebugSources" />
+        <afterSyncTasks>
+          <task>generateDebugSources</task>
+        </afterSyncTasks>
+        <option name="ALLOW_USER_CONFIGURATION" value="false" />
+        <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
+        <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/../../../../node_modules/expo-font/android/src/main/res;file://$MODULE_DIR$/../../../../node_modules/expo-font/android/src/debug/res;file://$MODULE_DIR$/../../../../node_modules/expo-font/android/build/generated/res/rs/debug;file://$MODULE_DIR$/../../../../node_modules/expo-font/android/build/generated/res/resValues/debug" />
+        <option name="TEST_RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/../../../../node_modules/expo-font/android/src/androidTest/res;file://$MODULE_DIR$/../../../../node_modules/expo-font/android/src/androidTestDebug/res;file://$MODULE_DIR$/../../../../node_modules/expo-font/android/build/generated/res/rs/androidTest/debug;file://$MODULE_DIR$/../../../../node_modules/expo-font/android/build/generated/res/resValues/androidTest/debug" />
+        <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
+        <option name="PROJECT_TYPE" value="1" />
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_11" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../../node_modules/expo-font/android/build/generated/ap_generated_sources/debugUnitTest/out" />
+    <content url="file://$MODULE_DIR$/../../../../node_modules/expo-font/android/src/test" />
+    <content url="file://$MODULE_DIR$/../../../../node_modules/expo-font/android/src/testDebug" />
+    <orderEntry type="jdk" jdkName="Android API 31 Platform" jdkType="Android SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="win.expo-font.main" scope="TEST" />
+    <orderEntry type="module" module-name="win.expo-modules-core.main" scope="TEST" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.10" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.6.10" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.6.10" level="project" />
+  </component>
+  <component name="TestModuleProperties" production-module="win.expo-font.main" />
+</module>
