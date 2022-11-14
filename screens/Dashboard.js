@@ -1,41 +1,66 @@
-import React from 'react';
-import { View,StyleSheet,Text,Dimensions } from 'react-native';
-import {
-    useFonts,
-    Lato_100Thin,
-    Lato_100Thin_Italic,
-    Lato_300Light,
-    Lato_300Light_Italic,
-    Lato_400Regular,
-    Lato_400Regular_Italic,
-    Lato_700Bold,
-    Lato_700Bold_Italic,
-    Lato_900Black,
-    Lato_900Black_Italic,
-  } from '@expo-google-fonts/lato';
-
+import React, { useState,useMemo,useCallback, useEffect } from 'react';
+import { View,StyleSheet,Text,Dimensions,TouchableOpacity } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
+import { BASE_URL } from './constants';
 
 const window = Dimensions.get('window');
 const windowWidth = window.width;
 const windowHeight = window.height;
 
 function Dashboard({navigation}) {
-    let [fontsLoaded] = useFonts({
-        Lato_100Thin,
-        Lato_100Thin_Italic,
-        Lato_300Light,
-        Lato_300Light_Italic,
-        Lato_400Regular,
-        Lato_400Regular_Italic,
-        Lato_700Bold,
-        Lato_700Bold_Italic,
-        Lato_900Black,
-        Lato_900Black_Italic,
-      });
+    const [loggedinusername,setLoggedinUsername]=useState();
+    const [loggedinmobile,setLoggedinMobile]=useState();
+    const [loggedinemail,setLoggedinEmail]=useState();
+    const [loggedindesc,setLoggedindesc]=useState();
     
+    const getData = async () =>{ try{
+    await AsyncStorage.getItem('loginusername').then(value => {
+        if(value!=null)
+        {
+            setLoggedinUsername(value);
+        }
+        else
+        {
+            navigation.navigate('Login');
+        }
+    })
     
+    await AsyncStorage.getItem('loginmobile').then(value => {
+        if(value!=null)
+        {
+            setLoggedinMobile(value);
+        }
+    })
+    
+    await AsyncStorage.getItem('loginemail').then(value => {
+        if(value!=null)
+        {
+            setLoggedinEmail(value);
+        }
+    })
+
+    await AsyncStorage.getItem('loginDesc').then(value => {
+        if(value!=null)
+        {
+            setLoggedindesc(value);
+        }
+    })
+    
+    }catch(error){
+    console.log(error);
+    }
+    
+    }
+    useFocusEffect(
+        useCallback(() => {
+            getData()
+            
+        }, [])
+      );
     return (
     <View style={{flex:1}}>
         
@@ -48,17 +73,17 @@ function Dashboard({navigation}) {
       }}>
         <View style={{flexDirection:"row",width:"100%",marginBottom:40}}>
         
-            <Pressable onPress={() => navigation.navigate('Profile')}>
+            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
                 <View style={{left:20,top:10,}}>
                     <FontAwesome5 name="user-circle" size={30} color="white" style={[styles.commonTextFeatures,{marginRight:5}]}/>
                 </View>
-            </Pressable>
+            </TouchableOpacity>
             
-            <Pressable onPress={() => navigation.navigate('Wallet')} style={{position:'absolute',right:20,top:10,}}>
+            <TouchableOpacity onPress={() => navigation.navigate('Wallet')} style={{position:'absolute',right:20,top:10,}}>
                 <View style={{flexDirection:"row",}}>
                     <FontAwesome5 name="wallet" size={30} color="white" style={[styles.commonTextFeatures,{marginRight:5}]}/>
                 </View>
-            </Pressable>
+            </TouchableOpacity>
 
         </View>
 
@@ -73,7 +98,7 @@ function Dashboard({navigation}) {
                    
                     <View style={{position:'absolute',left:20,}}>
                         <Text style={[styles.welcomeText]}>
-                            Welcome Hari.
+                            Welcome {loggedinusername}.
                         </Text>
                         <Text style={[styles.tagLine,styles.commonTextFeatures]}>Loreum Ipsum Loreum Ipsum Lo</Text>
                     </View>
@@ -88,7 +113,7 @@ function Dashboard({navigation}) {
                 <View style={{flexDirection:"row"}}>
                 
                 
-                <Pressable android_ripple={{color:'#ffffff'}} style={[styles.pressableButton]} onPress={() => navigation.navigate('Requirement')}>
+                <Pressable style={[styles.pressableButton]} onPress={() => navigation.navigate('Requirement')}>
                   <Text style={styles.loginText}>Search For Support</Text>
                 </Pressable>
 
