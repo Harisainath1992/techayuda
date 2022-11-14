@@ -16,6 +16,7 @@ import Posted from './Posted';
 import CompleteTask from './CompleteTask';
 import PostedTaskDetails from './PostedTaskDetails';
 import ChatList from './ChatList';
+import Technology from './Technology';
 
 const Stack = createStackNavigator();
 
@@ -23,18 +24,19 @@ export default AppStack= ()=>{
     return (
       <NavigationContainer>
         <Stack.Navigator>
+        <Stack.Screen
+          name='Login'
+          component={Login}
+          options={{header:()=>null}}
+          >
+          </Stack.Screen>
           <Stack.Screen
           name='Register'
           component={Register}
           options={{header:()=>null}}
           >
           </Stack.Screen>
-          <Stack.Screen
-          name='Login'
-          component={Login}
-          options={{header:()=>null}}
-          >
-          </Stack.Screen>
+          
           <Stack.Screen
           name='Dashboard'
           component={Dashboard}
@@ -53,6 +55,15 @@ export default AppStack= ()=>{
           <Stack.Screen
           name='Wallet'
           component={Wallet}
+          options={{
+            header:()=>null
+          }}
+          >
+          </Stack.Screen>
+
+          <Stack.Screen
+          name='Technology'
+          component={Technology}
           options={{
             header:()=>null
           }}

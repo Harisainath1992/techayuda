@@ -105,7 +105,10 @@ function Profile({navigation}) {
      );
        
     }
-
+    const logout = async () =>{
+      await AsyncStorage.clear()
+      navigation.navigate('Login')
+    }
     return (
     <View style={{flex:1}}>
         
@@ -116,6 +119,7 @@ function Profile({navigation}) {
         flex:1,
       }}>
         <MaterialCommunityIcons name="arrow-left-thin" size={40} color="white" onPress={() => navigation.navigate('Dashboard')} style={{margin:20,fontWeight:'normal',}}/>
+        <MaterialCommunityIcons name="logout" size={30} color="#ffffff" onPress={logout} style={{marginRight:20,top:20,fontWeight:'normal',right:0,position:'absolute'}}/>
         <View
             style={{
                 alignItems: 'center',
@@ -218,10 +222,14 @@ function Profile({navigation}) {
               <View style={{flexDirection:'row',}}>
                     <Text style={{fontSize:16,marginRight:15,color:"rgba(41, 22, 49, 0.38)"}}>
                     Technology Preferences
-                    </Text>    
-                    <Text style={{fontSize:20,fontFamily:'Lato_400Regular',position:'absolute',right:0}}>
-                      <FontAwesome5 name="edit" size={20} color="#191820" style={[styles.commonTextFeatures,{marginRight:5,color:'rgba(41, 22, 49, 0.38)'}]}/>
-                    </Text>    
+                    </Text>   
+                    
+                        <Text style={{fontSize:20,position:'absolute',right:0}}>
+                        <TouchableOpacity style={{}} onPress={()=>navigation.navigate('Technology')}>
+                          <FontAwesome5 name="edit" size={20} color="#191820" style={[styles.commonTextFeatures,{marginRight:5,color:'rgba(41, 22, 49, 0.38)'}]}/>
+                          </TouchableOpacity>  
+                        </Text> 
+                   
               </View>
               
               <Text style={{fontSize:20,color:'#191820'}}>
