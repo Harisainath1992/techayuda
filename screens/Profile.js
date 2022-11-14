@@ -1,38 +1,111 @@
-import React from 'react';
-import { View,ScrollView,StyleSheet,Text } from 'react-native';
+import React, { useState,useCallback,useRef } from 'react';
+import { View,ScrollView,StyleSheet,Text,TextInput,TouchableOpacity } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import {
-  useFonts,
-  Lato_100Thin,
-  Lato_100Thin_Italic,
-  Lato_300Light,
-  Lato_300Light_Italic,
-  Lato_400Regular,
-  Lato_400Regular_Italic,
-  Lato_700Bold,
-  Lato_700Bold_Italic,
-  Lato_900Black,
-  Lato_900Black_Italic,
-} from '@expo-google-fonts/lato';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+import axios from 'axios';
 import CustButton from './button';
-const updateProfile = () =>{
-    alert('Updated');
-}
+import { BASE_URL } from './constants';
+
 function Profile({navigation}) {
-  let [fontsLoaded] = useFonts({
-    Lato_100Thin,
-    Lato_100Thin_Italic,
-    Lato_300Light,
-    Lato_300Light_Italic,
-    Lato_400Regular,
-    Lato_400Regular_Italic,
-    Lato_700Bold,
-    Lato_700Bold_Italic,
-    Lato_900Black,
-    Lato_900Black_Italic,
-  });
+  const [loginusername,setloginusername] = useState("");
+  const [loginmobile,setloginmobile] = useState("");
+  const [loginemail,setloginemail] = useState("");
+  const [logindesc,setlogindesc] = useState("");
+  const[isLoading,setIsLoading]=useState(false);
+  const [oldpassword,setoldpassword] = useState();
+  const [newpassword,setnewpassword] = useState();
+  const getData = async () =>{ try{
+    await AsyncStorage.getItem('loginusername').then(value => {
+        if(value!=null)
+        {
+          setloginusername(value);
+        }
+        else
+        {
+            navigation.navigate('Login');
+        }
+    })
+    
+    await AsyncStorage.getItem('loginmobile').then(value => {
+        if(value!=null)
+        {
+          setloginmobile(value);
+        }
+    })
+    
+    await AsyncStorage.getItem('loginemail').then(value => {
+        if(value!=null)
+        {
+          setloginemail(value);
+        }
+    })
+
+    await AsyncStorage.getItem('loginDesc').then(value => {
+        if(value!=null)
+        {
+          setlogindesc(value);
+        }
+    })
+    
+    }catch(error){
+    console.log(error);
+    }
+    
+    }
+    useFocusEffect(
+      useCallback(() => {
+          getData()
+          
+      }, [])
+    );
+
+    const updateProfile = () =>{
+    
+      setIsLoading(true);
+      axios.post(BASE_URL+"updateProfile.php", {
+        loginusername: loginusername,
+        loginmobile: loginmobile,
+        loginemail: loginemail,
+        newpassword: newpassword,
+        oldpassword: oldpassword,
+        loginDesc:logindesc,
+      }, {
+        headers: {
+          'loginusername': loginusername,
+          'loginmobile': loginmobile,
+          'loginemail': loginemail,
+          'oldpassword': oldpassword,
+          'newpassword': newpassword,
+          'loginDesc':logindesc,
+        }
+      }).then(response => {
+        if(response.data.code==200){
+            setIsLoading(false);
+            try{
+              AsyncStorage.setItem("loginusername",response.data.loginusername);
+              AsyncStorage.setItem("loginmobile",response.data.loginmobile);
+              AsyncStorage.setItem("loginDesc",response.data.logindesc);
+            }catch(error){
+                console.log(error);
+            }
+            alert(response.data.message);
+            navigation.navigate('Dashboard')
+          }
+          else
+          {
+            alert(response.data.message);
+            setIsLoading(false);
+            return true;
+          }
+        }).catch(error => {
+          //console.log('useeffect' + error);
+      }
+     );
+       
+    }
+
     return (
     <View style={{flex:1}}>
         
@@ -47,115 +120,143 @@ function Profile({navigation}) {
             style={{
                 alignItems: 'center',
                 justifyContent:'center',
-                marginTop:20
+                
               }}
         >
-          
-           <View style={{width:"85%",backgroundColor:'#ffffff',borderRadius:10,marginBottom:10,paddingLeft:25,paddingRight:25,paddingTop:10,paddingBottom:10}}>
-              <View style={{flexDirection:'row',marginBottom:5}}>
-                    <Text style={{fontSize:16,marginRight:15,fontFamily:'Lato_400Regular',color:"rgba(41, 22, 49, 0.38)"}}>
-                      Name
-                    </Text>    
-                    <Text style={{fontSize:20,fontFamily:'Lato_400Regular',position:'absolute',right:0}}>
-                      <FontAwesome5 name="edit" size={20} color="#191820" style={[styles.commonTextFeatures,{marginRight:5,color:'rgba(41, 22, 49, 0.38)'}]}/>
-                    </Text>
-                      
-              </View>
-              <View style={{flexDirection:'row'}}>
-                  <Text style={{fontSize:18,fontFamily:'Lato_400Regular',color:'#191820'}}>
-                    Hari sainath
-                  </Text>  
-              </View>
-            </View> 
-
-
-            <View style={{width:"85%",backgroundColor:'#ffffff',borderRadius:10,marginBottom:10,paddingLeft:25,paddingRight:25,paddingTop:10,paddingBottom:10}}>
-              <View style={{flexDirection:'row',marginBottom:5}}>
-                    <Text style={{fontSize:16,marginRight:15,fontFamily:'Lato_400Regular',color:"rgba(41, 22, 49, 0.38)"}}>
-                    Mobile
-                    </Text>    
-                    <Text style={{fontSize:20,fontFamily:'Lato_400Regular',position:'absolute',right:0}}>
-                      <FontAwesome5 name="edit" size={20} color="#191820" style={[styles.commonTextFeatures,{marginRight:5,color:'rgba(41, 22, 49, 0.38)'}]}/>
-                    </Text>
-                     
-              </View>
-              <View style={{flexDirection:'row'}}>
-                  <Text style={{fontSize:20,fontFamily:'Lato_400Regular',color:'#191820'}}>
-                    7794020107
-                    </Text>    
-              </View>
-            </View> 
-
-            <View style={{width:"85%",backgroundColor:'#ffffff',borderRadius:10,marginBottom:10,paddingLeft:25,paddingRight:25,paddingTop:10,paddingBottom:10}}>
-              <View style={{flexDirection:'row',marginBottom:5}}>
-                    <Text style={{fontSize:16,marginRight:15,fontFamily:'Lato_400Regular',color:"rgba(41, 22, 49, 0.38)"}}>
+          <View style={{width:"85%",backgroundColor:'#ffffff',borderRadius:10,marginBottom:10,paddingLeft:10,paddingRight:10,paddingTop:10,paddingBottom:10}}>
+              <View style={{flexDirection:'row',}}>
+                    <Text style={{fontSize:16,marginRight:15,color:"rgba(41, 22, 49, 0.38)"}}>
                     Email
                     </Text>  
-                    <Text style={{fontSize:20,fontFamily:'Lato_400Regular',position:'absolute',right:0}}>
+                    {/* <Text style={{fontSize:20,fontFamily:'Lato_400Regular',position:'absolute',right:0}}>
                       <FontAwesome5 name="edit" size={20} color="#191820" style={[styles.commonTextFeatures,{marginRight:5,color:'rgba(41, 22, 49, 0.38)'}]}/>
-                    </Text>  
+                    </Text>   */}
               </View>
-              <View style={{flexDirection:'row'}}>
+              
               <Text style={{fontSize:20,fontFamily:'Lato_400Regular',color:'#191820'}}>
-                    harisainath51@gmail.com
+              {loginemail}
                     </Text> 
                         
-              </View>
             </View> 
 
-            <View style={{width:"85%",backgroundColor:'#ffffff',borderRadius:10,marginBottom:10,paddingLeft:25,paddingRight:25,paddingTop:10,paddingBottom:10}}>
-              <View style={{flexDirection:'row',marginBottom:5}}>
-                    <Text style={{fontSize:16,marginRight:15,fontFamily:'Lato_400Regular',color:"rgba(41, 22, 49, 0.38)"}}>
+            <View style={{width:"85%",backgroundColor:'#ffffff',borderRadius:10,marginBottom:10,paddingLeft:10,paddingRight:10,paddingTop:10,paddingBottom:10}}>
+              <View style={{flexDirection:'row',}}>
+                    <Text style={{fontSize:16,marginRight:15,color:"rgba(41, 22, 49, 0.38)"}}>
+                      Name
+                    </Text>    
+                    {/* <Text style={{fontSize:20,fontFamily:'Lato_400Regular',position:'absolute',right:0}}>
+                      <FontAwesome5 name="edit" size={20} color="#191820" style={[styles.commonTextFeatures,{marginRight:5,color:'rgba(41, 22, 49, 0.38)'}]}/>
+                    </Text> */}
+                      
+              </View>
+              
+              <TextInput
+                    style={[styles.input,{width:"100%",margin:0}]}
+                    placeholder="Name"
+                    placeholderTextColor={'#bdbbbb'}
+                    secureTextEntry={false}
+                    value={loginusername}
+                    name="profileusername"
+                    onChangeText={(text) => setloginusername(text)}
+                />
+              
+            </View> 
+
+
+            <View style={{width:"85%",backgroundColor:'#ffffff',borderRadius:10,marginBottom:10,paddingLeft:10,paddingRight:10,paddingTop:10,paddingBottom:10}}>
+              <View style={{flexDirection:'row',}}>
+                    <Text style={{fontSize:16,marginRight:15,color:"rgba(41, 22, 49, 0.38)"}}>
+                    Mobile
+                    </Text>    
+                    {/* <Text style={{fontSize:20,fontFamily:'Lato_400Regular',position:'absolute',right:0}}>
+                      <FontAwesome5 name="edit" size={20} color="#191820" style={[styles.commonTextFeatures,{marginRight:5,color:'rgba(41, 22, 49, 0.38)'}]}/>
+                    </Text> */}
+                     
+              </View>
+              
+              <TextInput
+                    style={[styles.input,{width:"100%",margin:0}]}
+                    placeholder="Mobile"
+                    placeholderTextColor={'#bdbbbb'}
+                    secureTextEntry={false}
+                    value={loginmobile}
+                    name="profilemobile"
+                    keyboardType="number-pad"
+                    onChangeText={(text) => setloginmobile(text)}
+                />   
+             
+            </View> 
+
+            
+
+            <View style={{width:"85%",backgroundColor:'#ffffff',borderRadius:10,marginBottom:10,paddingLeft:10,paddingRight:10,paddingTop:10,paddingBottom:10}}>
+              <View style={{flexDirection:'row',}}>
+                    <Text style={{fontSize:16,marginRight:15,color:"rgba(41, 22, 49, 0.38)"}}>
                     About
                     </Text>   
-                    <Text style={{fontSize:20,fontFamily:'Lato_400Regular',position:'absolute',right:0,}}>
+                    {/* <Text style={{fontSize:20,fontFamily:'Lato_400Regular',position:'absolute',right:0,}}>
                       <FontAwesome5 name="edit" size={20} color="#191820" style={[styles.commonTextFeatures,{marginRight:5,color:'rgba(41, 22, 49, 0.38)'}]}/>
-                  </Text>     
+                  </Text>      */}
               </View>
-              <View style={{flexDirection:'row',}}>
-              <Text style={{fontSize:20,fontFamily:'Lato_400Regular',color:'#191820'}}>
-                    Loreum Ipsum Loreum Ipsum Loreum Ipsum Loreum Ipsum Loreum Ipsum Loreum Ipsum 
-                    </Text> 
-              </View>
+              
+              <TextInput
+                    style={[styles.input,{width:"100%",margin:0,padding:5}]}
+                    placeholder="Description"
+                    placeholderTextColor={'#bdbbbb'}
+                    secureTextEntry={false}
+                    value={logindesc}
+                    name="logindesc"
+                    multiline ={true}
+                    numberOfLines = {4}
+                    onChangeText={(text) => setlogindesc(text)}
+                />   
+              
             </View> 
 
 
-            <View style={{width:"85%",backgroundColor:'#ffffff',borderRadius:10,marginBottom:50,paddingLeft:25,paddingRight:25,paddingTop:10,paddingBottom:10}}>
-              <View style={{flexDirection:'row',marginBottom:5}}>
-                    <Text style={{fontSize:16,marginRight:15,fontFamily:'Lato_400Regular',color:"rgba(41, 22, 49, 0.38)"}}>
+            <View style={{width:"85%",backgroundColor:'#ffffff',borderRadius:10,marginBottom:10,paddingLeft:10,paddingRight:10,paddingTop:10,paddingBottom:10}}>
+              <View style={{flexDirection:'row',}}>
+                    <Text style={{fontSize:16,marginRight:15,color:"rgba(41, 22, 49, 0.38)"}}>
                     Technology Preferences
                     </Text>    
                     <Text style={{fontSize:20,fontFamily:'Lato_400Regular',position:'absolute',right:0}}>
                       <FontAwesome5 name="edit" size={20} color="#191820" style={[styles.commonTextFeatures,{marginRight:5,color:'rgba(41, 22, 49, 0.38)'}]}/>
                     </Text>    
               </View>
-              <View style={{flexDirection:'row',}}>
-              <Text style={{fontSize:20,fontFamily:'Lato_400Regular',color:'#191820'}}>
+              
+              <Text style={{fontSize:20,color:'#191820'}}>
                     PHP, Java, Python
                     </Text> 
-              </View>
             </View> 
 
-            {/* <View style={{width:"85%",backgroundColor:'#ffffff',borderRadius:10,marginBottom:10,paddingLeft:15,paddingRight:15,paddingTop:10,paddingBottom:10}}>
-                    <CustInput
-                  width="95%"
-                  placeholder="New Password"
-                  secure={true}
-                  height={60}
-                  ></CustInput>
+            <View style={{width:"85%",backgroundColor:'#ffffff',borderRadius:10,marginBottom:10,paddingLeft:10,paddingRight:10,paddingTop:10,paddingBottom:10}}>
+            <View style={{}}>
+              <TextInput
+                    style={[styles.input,{width:"100%",margin:1}]}
+                    placeholder="Old Password"
+                    placeholderTextColor={'#bdbbbb'}
+                    secureTextEntry={true}
+                    name="profileoldpassword"
+                    onChangeText={(text) => setoldpassword(text)}
+                />
+              <TextInput
+                    style={[styles.input,{width:"100%",margin:1}]}
+                    placeholder="New Password"
+                    placeholderTextColor={'#bdbbbb'}
+                    secureTextEntry={true}
+                    name="profilenewpassword"
+                    onChangeText={(text) => setnewpassword(text)}
+                />
 
-                  <CustInput
-                  width="95%"
-                  placeholder="Confirm Password"
-                  secure={true}
-                  height={60}
-                  ></CustInput>
-            </View> */}
+              </View>
+                    
+            </View>
 
                 <CustButton
                 onPressFunction={updateProfile}
                 title="Update"
                 width="85%"
+                loading={isLoading}
                 ></CustButton>
         </View>
         </ScrollView>
@@ -173,7 +274,17 @@ const styles = StyleSheet.create({
         borderColor:'#191820',
         borderWidth:1,
         backgroundColor: '#ffffff',
-      }
+      },
+      input: {
+        margin: 8,
+        borderWidth: 1,
+        padding: 5,
+        borderColor:'#2e2d35',
+        color:"#ffffff",
+        fontWeight:'600',
+        borderRadius:10,
+        backgroundColor:'#413e4f'
+      },
 });
 
 export default Profile;
