@@ -16,7 +16,6 @@ import Posted from './Posted';
 import CompleteTask from './CompleteTask';
 import PostedTaskDetails from './PostedTaskDetails';
 import ChatList from './ChatList';
-import Technology from './Technology';
 
 const Stack = createStackNavigator();
 
@@ -61,17 +60,7 @@ export default AppStack= ()=>{
           >
           </Stack.Screen>
 
-          <Stack.Screen
-          name='Technology'
-          component={Technology}
-          options={{
-            header:()=>null
-          }}
-          >
-          </Stack.Screen>
-
-
-
+          
           <Stack.Screen
           name='Requirement'
           component={Requirement}

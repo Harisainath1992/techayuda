@@ -1,9 +1,11 @@
-import React, { useState,useCallback,useRef } from 'react';
+import React, { useState,useCallback,useEffect } from 'react';
 import { View,ScrollView,StyleSheet,Text,TextInput,TouchableOpacity } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import SelectBox from 'react-native-multi-selectbox'
+import { xorBy } from 'lodash'
 import axios from 'axios';
 import CustButton from './button';
 import { BASE_URL } from './constants';
@@ -16,6 +18,9 @@ function Profile({navigation}) {
   const[isLoading,setIsLoading]=useState(false);
   const [oldpassword,setoldpassword] = useState();
   const [newpassword,setnewpassword] = useState();
+  const [selectedTech, setSelectedTech] = useState([])
+  const [technologies,setTechnologies] = useState([]);
+  const[isTechLoading,setIsTechLoading]=useState(true);
   const getData = async () =>{ try{
     await AsyncStorage.getItem('loginusername').then(value => {
         if(value!=null)
@@ -49,6 +54,34 @@ function Profile({navigation}) {
         }
     })
     
+    axios.post(BASE_URL+"technologies.php", {
+    }, {
+      headers: {
+      }
+    }).then(response => {
+      
+      if(response.data.code==200){
+              try{
+                  setTechnologies(response.data.technologies);
+                  setIsTechLoading(false);
+              }catch(error){
+                  console.log(error);
+                  setIsTechLoading(false);
+              }
+        }
+        else
+        {
+          alert(response.data.message);
+          setIsTechLoading(false);
+          return true;
+        }
+      }).catch(error => {
+        setIsTechLoading(false);
+        //console.log('useeffect' + error);
+    }
+   );
+
+
     }catch(error){
     console.log(error);
     }
@@ -60,7 +93,13 @@ function Profile({navigation}) {
           
       }, [])
     );
-
+    useEffect(() => {
+      console.log(technologies);
+    }, [technologies]);
+    
+    function onMultiChange() {
+      return (item) => setSelectedTech(xorBy(selectedTech, [item], 'id'))
+    }
     const updateProfile = () =>{
     
       setIsLoading(true);
@@ -71,6 +110,7 @@ function Profile({navigation}) {
         newpassword: newpassword,
         oldpassword: oldpassword,
         loginDesc:logindesc,
+        selectedTech:JSON.stringify(selectedTech),
       }, {
         headers: {
           'loginusername': loginusername,
@@ -79,6 +119,7 @@ function Profile({navigation}) {
           'oldpassword': oldpassword,
           'newpassword': newpassword,
           'loginDesc':logindesc,
+          'selectedTech':JSON.stringify(selectedTech),
         }
       }).then(response => {
         if(response.data.code==200){
@@ -225,16 +266,31 @@ function Profile({navigation}) {
                     </Text>   
                     
                         <Text style={{fontSize:20,position:'absolute',right:0}}>
-                        <TouchableOpacity style={{}} onPress={()=>navigation.navigate('Technology')}>
+                        {/* <TouchableOpacity style={{}} onPress={()=>navigation.navigate('Technology')}>
                           <FontAwesome5 name="edit" size={20} color="#191820" style={[styles.commonTextFeatures,{marginRight:5,color:'rgba(41, 22, 49, 0.38)'}]}/>
-                          </TouchableOpacity>  
+                          </TouchableOpacity>   */}
                         </Text> 
                    
               </View>
               
-              <Text style={{fontSize:20,color:'#191820'}}>
-                    PHP, Java, Python
-                    </Text> 
+              {isTechLoading ? <Text style={{color:"#191820",marginBottom:10}}>Loading...</Text> : 
+               
+                  <SelectBox
+                        options={technologies}
+                        selectedValues={selectedTech}
+                        onMultiSelect={onMultiChange()}
+                        onTapClose={onMultiChange()}
+                        inputPlaceholder="Search Your Technical Skills"
+                        label=""
+                        multiOptionContainerStyle={{backgroundColor:"#191820",}}
+                        optionContainerStyle={{backgroundColor:"#ffffff",}}
+                        inputFilterContainerStyle={{backgroundColor:"#ffffff",}}
+                        containerStyle={{backgroundColor:'#ffffff',padding:10,}}
+                        multiOptionsLabelStyle={{color:"#ffffff",fontWeight:'bold'}}
+                        isMulti
+                      />
+                  
+                  }
             </View> 
 
             <View style={{width:"85%",backgroundColor:'#ffffff',borderRadius:10,marginBottom:10,paddingLeft:10,paddingRight:10,paddingTop:10,paddingBottom:10}}>
