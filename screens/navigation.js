@@ -23,18 +23,19 @@ export default AppStack= ()=>{
     return (
       <NavigationContainer>
         <Stack.Navigator>
+        <Stack.Screen
+          name='Login'
+          component={Login}
+          options={{header:()=>null}}
+          >
+          </Stack.Screen>
           <Stack.Screen
           name='Register'
           component={Register}
           options={{header:()=>null}}
           >
           </Stack.Screen>
-          <Stack.Screen
-          name='Login'
-          component={Login}
-          options={{header:()=>null}}
-          >
-          </Stack.Screen>
+          
           <Stack.Screen
           name='Dashboard'
           component={Dashboard}
@@ -59,8 +60,7 @@ export default AppStack= ()=>{
           >
           </Stack.Screen>
 
-
-
+          
           <Stack.Screen
           name='Requirement'
           component={Requirement}
