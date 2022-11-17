@@ -16,6 +16,7 @@ import Posted from './Posted';
 import CompleteTask from './CompleteTask';
 import PostedTaskDetails from './PostedTaskDetails';
 import ChatList from './ChatList';
+import BuyCoins from './Buycoins';
 
 const Stack = createStackNavigator();
 
@@ -154,6 +155,15 @@ export default AppStack= ()=>{
           <Stack.Screen
           name='ChatList'
           component={ChatList}
+          options={{
+            header:()=>null
+          }}
+          >
+          </Stack.Screen>
+
+          <Stack.Screen
+          name='BuyCoins'
+          component={BuyCoins}
           options={{
             header:()=>null
           }}

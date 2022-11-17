@@ -1,35 +1,97 @@
-import React from 'react';
+import React,{useCallback,useState} from 'react';
 import { View,ScrollView,StyleSheet,Text } from 'react-native';
-import {
-  useFonts,
-  Lato_100Thin,
-  Lato_100Thin_Italic,
-  Lato_300Light,
-  Lato_300Light_Italic,
-  Lato_400Regular,
-  Lato_400Regular_Italic,
-  Lato_700Bold,
-  Lato_700Bold_Italic,
-  Lato_900Black,
-  Lato_900Black_Italic,
-} from '@expo-google-fonts/lato';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 import CustButton from './button';
 function Wallet({navigation}) {
-  let [fontsLoaded] = useFonts({
-    Lato_100Thin,
-    Lato_100Thin_Italic,
-    Lato_300Light,
-    Lato_300Light_Italic,
-    Lato_400Regular,
-    Lato_400Regular_Italic,
-    Lato_700Bold,
-    Lato_700Bold_Italic,
-    Lato_900Black,
-    Lato_900Black_Italic,
-  });
+
+  const[isLoading,setIsLoading]=useState(false);
+    const [loggedinusername,setLoggedinUsername]=useState();
+    const [loggedinmobile,setLoggedinMobile]=useState();
+    const [loggedinemail,setLoggedinEmail]=useState();
+    const [loggedindesc,setLoggedindesc]=useState();
+    const [loginid,setloginid]=useState();
+    const [walletAmount,setwalletAmount]=useState("0");
+
+    const getData = async () =>{ try{
+        await AsyncStorage.getItem('loginusername').then(value => {
+            if(value!=null)
+            {
+                setLoggedinUsername(value);
+            }
+            else
+            {
+                navigation.navigate('Login');
+            }
+        })
+        
+        await AsyncStorage.getItem('loginmobile').then(value => {
+            if(value!=null)
+            {
+                setLoggedinMobile(value);
+            }
+        })
+        
+        await AsyncStorage.getItem('loginemail').then(value => {
+            if(value!=null)
+            {
+                setLoggedinEmail(value);
+            }
+        })
+    
+        await AsyncStorage.getItem('loginDesc').then(value => {
+            if(value!=null)
+            {
+                setLoggedindesc(value);
+            }
+        })
+
+        await AsyncStorage.getItem('loginid').then(value => {
+            if(value!=null)
+            {
+                setloginid(value);
+            }
+        })
+        
+
+        axios.post(BASE_URL+"getWalletDetails.php", {
+          Loginid:loginid
+        }, {
+          headers: {
+          }
+        }).then(response => {
+          if(response.data.code==200){
+              setIsLoading(false);
+              setwalletAmount(response.data.walletamount);
+            }
+            else
+            {
+              alert(response.data.message);
+              setIsLoading(false);
+              navigation.navigate('Dashboard');
+              return true;
+            }
+          }).catch(error => {
+            //console.log('useeffect' + error);
+        }
+       );
+      
+
+
+        }catch(error){
+        console.log(error);
+        }
+        
+        }
+        useFocusEffect(
+            useCallback(() => {
+                getData()
+            }, [])
+          );
     return (
       
       <View style={{
@@ -37,8 +99,8 @@ function Wallet({navigation}) {
         flex:1,
       }}>
         
-        
-        <MaterialCommunityIcons name="arrow-left-thin" size={40} color="white" onPress={() => navigation.navigate('Dashboard')} style={{marginTop:20,marginLeft:10,fontWeight:'normal',}}/>
+        <TouchableOpacity onPress={() => navigation.navigate('Dashboard')}>
+        <MaterialCommunityIcons name="arrow-left-thin" size={40} color="white"  style={{marginTop:20,marginLeft:10,fontWeight:'normal',}}/></TouchableOpacity>
 
        <View  
       style={{
@@ -62,7 +124,7 @@ function Wallet({navigation}) {
                     <View style={{position:'absolute',left:20,width:"35%",}}>
                     <Text style={[styles.tagLine,styles.commonTextFeatures]}>Wallet Balance</Text>
                         <Text style={[styles.welcomeText]}>
-                        <FontAwesome5 name="coins" size={20} color="white" style={[styles.commonTextFeatures,{}]}/> 1000
+                        <FontAwesome5 name="coins" size={20} color="white" style={[styles.commonTextFeatures,{}]}/> {walletAmount}
                         </Text>
                     </View>
                     
@@ -76,17 +138,12 @@ function Wallet({navigation}) {
                         ></CustButton>
                         <CustButton
                         onPressFunction={() => navigation.navigate('TransferCoins')}
-                        title="Transfer"
+                        title="Send"
                         width="50%"
                         rightMargin={8}
                         height={40}
                         ></CustButton>
-                        {/* <CustButton
-                        onPressFunction={() => navigation.navigate('Withdrawl')}
-                        title="Withdraw"
-                        width="36%"
-                        height={40}
-                        ></CustButton> */}
+                        
                     </View>
                 </View>
 
