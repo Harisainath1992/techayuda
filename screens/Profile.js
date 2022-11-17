@@ -9,6 +9,7 @@ import { xorBy } from 'lodash'
 import axios from 'axios';
 import CustButton from './button';
 import { BASE_URL } from './constants';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 function Profile({navigation}) {
   const [loginusername,setloginusername] = useState("");
@@ -275,6 +276,7 @@ function Profile({navigation}) {
               
               {isTechLoading ? <Text style={{color:"#191820",marginBottom:10}}>Loading...</Text> : 
                
+                  <ScrollView nestedScrollEnabled={true} >
                   <SelectBox
                         options={technologies}
                         selectedValues={selectedTech}
@@ -287,8 +289,10 @@ function Profile({navigation}) {
                         inputFilterContainerStyle={{backgroundColor:"#ffffff",}}
                         containerStyle={{backgroundColor:'#ffffff',padding:10,}}
                         multiOptionsLabelStyle={{color:"#ffffff",fontWeight:'bold'}}
+                        listOptionProps={{ nestedScrollEnabled: true }}
                         isMulti
                       />
+                      </ScrollView>
                   
                   }
             </View> 
