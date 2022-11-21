@@ -182,7 +182,10 @@ function Wallet({navigation}) {
                 
 
                 <View style={styles.Container}>
-                
+                <View>
+                  <Text style={{fontWeight:'bold',color:"#191820",marginBottom:5}}>Recent Transactions</Text>
+                  {/* <Text style={{right:0,position:'absolute',fontWeight:'bold',fontSize:16,textDecorationLine:"underline",color:"#191820"}}>View All</Text> */}
+                </View>
                         <FlatList
                             data={walletTransaction}
                             keyExtractor={({ id }) => id}
@@ -190,9 +193,12 @@ function Wallet({navigation}) {
                         />
                 
                 </View>
+                <TouchableOpacity  onPress={() => navigation.navigate('Withdrawl')}>
+                  <View style={{backgroundColor:"#191820",alignItems:'center',justifyContent:'center',width:"100%",height:40,bottom:0}}>
+                    <Text style={{color:"#ffffff",fontWeight:'bold',fontSize:20}}>Withdraw Coins</Text>
+                  </View>
+                </TouchableOpacity>
         </View>
-
-       
 
         </View>
 

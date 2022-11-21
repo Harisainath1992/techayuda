@@ -72,32 +72,40 @@ function SendCoins({navigation}) {
             setIsLoading(true);
             if(coins!='' && coins>=0)
             {
-            axios.post(BASE_URL+"sendCoins.php", {
-                Coins: coins,
-                Loginid:loginid,
-                Email:transferEmail
-              }, {
-                headers: {
+                if(transferEmail!='')
+                {
+                    axios.post(BASE_URL+"sendCoins.php", {
+                        Coins: coins,
+                        Loginid:loginid,
+                        Email:transferEmail
+                    }, {
+                        headers: {
+                        }
+                    }).then(response => {
+                        alert(response.data);
+                        if(response.data.code==200){
+                            setIsLoading(false);
+                            AsyncStorage.setItem("walletAmount",response.data.walletAmount);
+                            //AsyncStorage.setItem("walletTransaction",JSON.stringify(response.data.walletTransaction));
+                            alert(response.data.message);
+                            navigation.navigate('Wallet');
+                        }
+                        else
+                        {
+                            alert(response.data.message);
+                            setIsLoading(false);
+                            return true;
+                        }
+                        }).catch(error => {
+                        //console.log('useeffect' + error);
+                    }
+                    );
                 }
-              }).then(response => {
-                alert(response.data);
-                if(response.data.code==200){
+                else
+                    {
+                    alert("Please enter receiver email.");
                     setIsLoading(false);
-                    AsyncStorage.setItem("walletAmount",response.data.walletAmount);
-                    //AsyncStorage.setItem("walletTransaction",JSON.stringify(response.data.walletTransaction));
-                    alert(response.data.message);
-                    navigation.navigate('Wallet');
-                  }
-                  else
-                  {
-                    alert(response.data.message);
-                    setIsLoading(false);
-                    return true;
-                  }
-                }).catch(error => {
-                  //console.log('useeffect' + error);
-              }
-             );
+                    }
             }
             else
             {
