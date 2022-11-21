@@ -69,6 +69,8 @@ function BuyCoins({navigation}) {
           );
         const BuyCoins = () =>{
             setIsLoading(true);
+            if(coins!='' && coins>=100)
+            {
             axios.post(BASE_URL+"buyCoins.php", {
                 Coins: coins,
                 Loginid:loginid
@@ -78,6 +80,8 @@ function BuyCoins({navigation}) {
               }).then(response => {
                 if(response.data.code==200){
                     setIsLoading(false);
+                    AsyncStorage.setItem("walletAmount",response.data.walletAmount);
+                    //AsyncStorage.setItem("walletTransaction",JSON.stringify(response.data.walletTransaction));
                     alert(response.data.message);
                     navigation.navigate('Wallet');
                   }
@@ -91,7 +95,12 @@ function BuyCoins({navigation}) {
                   //console.log('useeffect' + error);
               }
              );
-            
+            }
+            else
+            {
+              alert("Please enter minimum of 100 coins.");
+              setIsLoading(false);
+            }
         }
     return (
     <View style={{flex:1}}>
@@ -118,6 +127,7 @@ function BuyCoins({navigation}) {
                     secureTextEntry={false}
                     placeholderTextColor={'#bdbbbb'}
                     onChangeText={(text) => setCoins(text)}
+                    keyboardType="number-pad"
                     name="coins"
                 />
 
