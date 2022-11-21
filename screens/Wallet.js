@@ -168,7 +168,7 @@ function Wallet({navigation}) {
                         height={40}
                         ></CustButton>
                         <CustButton
-                        onPressFunction={() => navigation.navigate('TransferCoins')}
+                        onPressFunction={() => navigation.navigate('SendCoins')}
                         title="Send"
                         width="50%"
                         rightMargin={8}
