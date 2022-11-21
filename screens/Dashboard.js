@@ -5,7 +5,7 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
-import { BASE_URL } from './constants';
+
 
 const window = Dimensions.get('window');
 const windowWidth = window.width;
@@ -100,7 +100,7 @@ function Dashboard({navigation}) {
                         <Text style={[styles.welcomeText]}>
                             Welcome {loggedinusername}.
                         </Text>
-                        <Text style={[styles.tagLine,styles.commonTextFeatures]}>Loreum Ipsum Loreum Ipsum Lo</Text>
+                        {/* <Text style={[styles.tagLine,styles.commonTextFeatures]}>Loreum Ipsum Loreum Ipsum Lo</Text> */}
                     </View>
                     
                 </View>

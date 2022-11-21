@@ -3,6 +3,7 @@ import { View,ScrollView,StyleSheet,Image,Text,TextInput,TouchableOpacity } from
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+const JSON5 = require('json5')
 import { BASE_URL } from './constants';
 import CustButton from './button';
 
@@ -74,6 +75,7 @@ const LoginDetails = async () =>{
             AsyncStorage.setItem("loginid",response.data.loginid);
             AsyncStorage.setItem("loginemail",response.data.loginemail);
             AsyncStorage.setItem("loginDesc",response.data.loginDesc);
+            AsyncStorage.setItem("walletAmount",response.data.walletAmount);
         }catch(error){
             console.log(error);
         }
