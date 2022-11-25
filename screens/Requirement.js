@@ -9,8 +9,6 @@ import axios from 'axios';
 import CustButton from './button';
 import { BASE_URL } from './constants';
 
-import CustInput from './textFields';
-
 
 function Requirement({navigation}) {
   const[isTechLoading,setIsTechLoading]=useState(true);
@@ -99,6 +97,10 @@ function Requirement({navigation}) {
     }
     
     }
+
+  const postRequirement = async () =>{
+
+  }
     function onMultiChange() {
       return (item) => setSelectedTech(xorBy(selectedTech, [item], 'id'))
     }
@@ -173,7 +175,7 @@ function Requirement({navigation}) {
                 </View>
 
                 <CustButton
-                onPressFunction={() => navigation.navigate('PostScreen')}
+                onPressFunction={postRequirement}
                 title="Post"
                 width="95%"
                 loading={isLoading}
