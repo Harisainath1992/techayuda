@@ -16,8 +16,9 @@ function Posted({navigation}) {
   const [loginid,setloginid]=useState();
   const [taskValues,setTaskValues]=useState();
   const [taskCount,settaskCount]=useState("0");
-
+  const [loading,setLoading]=useState(false);
   const getData = async () =>{ try{
+    setLoading(true);
     await AsyncStorage.getItem('loginusername').then(value => {
         if(value!=null)
         {
@@ -84,7 +85,7 @@ function Posted({navigation}) {
     }catch(error){
     console.log(error);
     }
-    
+    setLoading(false);
     }
   
     const ItemRender = ({ item }) => (
@@ -95,7 +96,7 @@ function Posted({navigation}) {
                           <Text style={styles.TransIconText}>{item.taskKeyWord}</Text>
                         </View>
                         <View style={{width:"40%"}}>
-                        <Pressable onPress={() => navigation.navigate('PostedTaskDetails')}>
+                        <Pressable onPress={() => navigation.navigate('PostedTaskDetails',{item})}>
                           <Text style={styles.TransferContent}>{item.Title}</Text>
                           <Text style={styles.Date}>{item.start_date} - {item.end_date}</Text>
                         </Pressable>
@@ -163,6 +164,7 @@ function Posted({navigation}) {
                     </View>
                     
                     <View  style={{position:'absolute',right:32,width:"60%",flexDirection:'row',}}>
+                      {loading ? <Text style={{color:"#ffffff"}}>loading....</Text> : ""}
                     {/* <CustButton
                         onPressFunction={() => navigation.navigate('Pending')}
                         title="Pending"
