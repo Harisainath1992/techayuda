@@ -31,6 +31,8 @@
     "prop-types": "^15.8.1",
     "react": "18.0.0",
     "react-native": "0.69.4",
+    "react-native-document-picker": "^8.1.2",
+    "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.5.0",
     "react-native-multi-selectbox": "^1.5.0",
     "react-native-multiple-select": "^0.5.11",
@@ -47,7 +49,8 @@
     "react-native-tab-view": "^3.1.1",
     "react-native-vector-icons": "^9.2.0",
     "react-native-virtualized-view": "^1.0.0",
-    "react-native-webview": "^11.23.1"
+    "react-native-webview": "^11.23.1",
+    "rn-fetch-blob": "github:joltup/rn-fetch-blob"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
