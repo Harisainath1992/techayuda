@@ -114,7 +114,7 @@ function Dashboard({navigation}) {
                 
                 
                 <Pressable style={[styles.pressableButton]} onPress={() => navigation.navigate('Requirement')}>
-                  <Text style={styles.loginText}>Search For Support</Text>
+                  <Text style={styles.loginText}>Post Your Requirement</Text>
                 </Pressable>
 
                 </View>
@@ -124,19 +124,17 @@ function Dashboard({navigation}) {
                                     <Pressable android_ripple={{color:'#191820',borderColor:'#191820',borderWidth:1,backgroundColor:'#ffffff'}} onPress={() => navigation.navigate('Supporting')} style={[styles.taskContainer,{backgroundColor:"#191820",marginRight:20}]}>
                                     <View style={{}}>
                                         <FontAwesome5 name="tasks" size={35} color="white" style={[styles.commonTextFeatures,{marginBottom:10}]}/>
-                                        <Text style={styles.commonTextFeatures}>Supporting</Text>    
-                                        <Text style={styles.commonTextFeatures}>Task's</Text>    
+                                        <Text style={styles.commonTextFeatures}>Your Supporting Requirements</Text>    
                                     </View> 
                                     </Pressable>
                                     <Pressable android_ripple={{color:'#ffffff'}} onPress={() => navigation.navigate('Posted')} style={[styles.taskContainer,{backgroundColor:"#191820"}]}>
                                     <View style={{}}>
                                     <FontAwesome5 name="network-wired" size={35} color="white" style={[styles.commonTextFeatures,{marginBottom:10}]}/>
-                                        <Text style={styles.commonTextFeatures}>Posted</Text>    
-                                        <Text style={styles.commonTextFeatures}>Task's</Text>    
+                                        <Text style={styles.commonTextFeatures}>Your Posted Requirements</Text>    
                                     </View> 
                                     </Pressable>
                         </View>
-                        <View style={[styles.innerContainer]}>
+                        {/* <View style={[styles.innerContainer]}>
                                     <Pressable android_ripple={{color:'#ffffff'}} onPress={() => navigation.navigate('Wallet')} style={[styles.taskContainer,{backgroundColor:"#191820",marginRight:20}]}>
                                         <View style={{}}>
                                         <FontAwesome5 name="coins" size={35} color="white" style={[styles.commonTextFeatures,{marginBottom:10}]}/>
@@ -153,7 +151,7 @@ function Dashboard({navigation}) {
                                         <Text style={styles.commonTextFeatures}>Request</Text>    
                                     </View> 
                                     </Pressable>
-                        </View>
+                        </View> */}
                  </View>
                 <View>
                     
@@ -173,19 +171,19 @@ const styles = StyleSheet.create({
     taskContainer:{
         alignContent:'center',
         justifyContent:'center',
-        width:130,
+        width:"100%",
         height:130,
         borderRadius:30,
         alignContent:'center',
         justifyContent:'center',
         borderColor:'#191820',
         borderWidth:1,
+        marginBottom:20
     },
     innerContainer:{
         backgroundColor:'#ffffff',
         width:"100%",
-        flexDirection:"row",
-        padding:15,
+        
         alignContent:'center',
         justifyContent:'center',
     },
