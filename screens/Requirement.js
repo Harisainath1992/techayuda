@@ -159,13 +159,14 @@ function Requirement({navigation}) {
                   const pickerResult = await DocumentPicker.pickSingle({
                     presentationStyle: 'fullScreen',
                     copyTo: 'cachesDirectory',
-                    type:types.zip
+                    type:types.allFiles
                   })
                   var object = Object.assign({}, pickerResult);
                   
-                  if(object.size>2000000)
+                  if(object.size>5000000)
                   {
-                    alert("Please upload the file <= 1MB ");
+                    alert("Please upload the file <= 5MB ");
+                    setLoading(false);
                     return true;
                   }
                   else{
@@ -178,6 +179,7 @@ function Requirement({navigation}) {
                                 axios.post(BASE_URL+"sendDocChat.php", {
                                   chatContent: res,
                                   studentId: loginId,
+                                  fileType:object.type,
                                 }, {
                                   headers: {
                                   
@@ -217,7 +219,18 @@ function Requirement({navigation}) {
     }
   const postRequirement = async () =>{
     setLoading(true);
-
+    if(selectedTech=="")
+    {
+      alert("Please Select Technical Skills");
+      setLoading(false);
+      return true;
+    }
+    if(title.trim()=="" || desc.trim()=="")
+    {
+      alert("Please enter Title and Description");
+      setLoading(false);
+      return true;
+    }
     axios.post(BASE_URL+"saveRequirement.php", {
       LoginId:loginId,
       Desc:desc,
@@ -284,12 +297,12 @@ function Requirement({navigation}) {
                      selectedValues={selectedTech}
                      onMultiSelect={onMultiChange()}
                      onTapClose={onMultiChange()}
-                     inputPlaceholder="Search Your Technical Skills"
+                     inputPlaceholder="Select Required Technical Skills"
                      label=""
                      multiOptionContainerStyle={{backgroundColor:"#191820",}}
                      optionContainerStyle={{backgroundColor:"#ffffff",}}
                      inputFilterContainerStyle={{backgroundColor:"#ffffff",}}
-                     containerStyle={{backgroundColor:'#ffffff',padding:10,}}
+                     containerStyle={{backgroundColor:'#ffffff',padding:10,height:40}}
                      multiOptionsLabelStyle={{color:"#ffffff",fontWeight:'bold',}}
                      listOptionProps={{ nestedScrollEnabled: true }}
                      isMulti
@@ -299,19 +312,17 @@ function Requirement({navigation}) {
                }
               
               <TextInput
-                    style={[styles.input,{width:"95%",margin:0,padding:5}]}
+                    style={[styles.input,{width:"95%",height:50,marginTop:20,padding:5}]}
                     placeholder="Title"
                     placeholderTextColor={'#bdbbbb'}
                     secureTextEntry={false}
                     value={title}
                     name="title"
-                    multiline ={true}
-                    numberOfLines = {4}
                     onChangeText={(text) => setTitle(text)}
                 />  
 
                   <TextInput
-                    style={[styles.input,{width:"95%",margin:0,padding:5}]}
+                    style={[styles.input,{width:"95%",marginTop:20,padding:5}]}
                     placeholder="Breif Description"
                     placeholderTextColor={'#bdbbbb'}
                     secureTextEntry={false}
@@ -322,13 +333,15 @@ function Requirement({navigation}) {
                     onChangeText={(text) => setdesc(text)}
                 />  
 
-                <View style={{alignItems:'center',justifyContent:'center',marginBottom:10}}>
-                <Text style={{fontSize:20,color:"#ffffff"}}>Upload Attachment(*zip)</Text>
+                <View style={{alignItems:'center',justifyContent:'center',marginBottom:100}}>
+                <Text style={{fontSize:20,color:"#ffffff",}}>Upload Attachment </Text>
                 <TouchableOpacity onPress={requestStoragePermission}>
                 <FontAwesome5 name="file-upload" size={50} color="white" style={[styles.commonTextFeatures,{marginRight:5}]}/>
                 </TouchableOpacity>
                 </View>
-
+                <View style={{alignItems:'center',justifyContent:'center',}}>
+                  {isLoading ? <Text style={{color:"#ffffff",}}>Please wait while we are saving...</Text> : ""}
+                </View>
                 <CustButton
                 onPressFunction={postRequirement}
                 title="Post"
