@@ -1,6 +1,8 @@
 import React, { useState,useMemo,useCallback, useEffect } from 'react';
 import { View,StyleSheet,Text,Dimensions,TouchableOpacity } from 'react-native';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -123,13 +125,13 @@ function Dashboard({navigation}) {
                         <View style={[styles.innerContainer]}>
                                     <Pressable android_ripple={{color:'#191820',borderColor:'#191820',borderWidth:1,backgroundColor:'#ffffff'}} onPress={() => navigation.navigate('Supporting')} style={[styles.taskContainer,{backgroundColor:"#191820",marginRight:20}]}>
                                     <View style={{}}>
-                                        <FontAwesome5 name="tasks" size={35} color="white" style={[styles.commonTextFeatures,{marginBottom:10}]}/>
-                                        <Text style={styles.commonTextFeatures}>Your Supporting Requirements</Text>    
+                                        <MaterialIcons name="support" size={65} color="white" style={[styles.commonTextFeatures,{marginBottom:10}]}/>
+                                        <Text style={[styles.commonTextFeatures,{fontWeight:'bold'}]}>Your Supporting Requirements</Text>    
                                     </View> 
                                     </Pressable>
                                     <Pressable android_ripple={{color:'#ffffff'}} onPress={() => navigation.navigate('Posted')} style={[styles.taskContainer,{backgroundColor:"#191820"}]}>
                                     <View style={{}}>
-                                    <FontAwesome5 name="network-wired" size={35} color="white" style={[styles.commonTextFeatures,{marginBottom:10}]}/>
+                                    <MaterialCommunityIcons name="post-outline" size={65} color="white" style={[styles.commonTextFeatures,{marginBottom:10}]}/>
                                         <Text style={styles.commonTextFeatures}>Your Posted Requirements</Text>    
                                     </View> 
                                     </Pressable>
