@@ -17,6 +17,7 @@ function Wallet({navigation}) {
     const [loggedindesc,setLoggedindesc]=useState();
     const [loginid,setloginid]=useState();
     const [walletAmount,setwalletAmount]=useState();
+    const [withdrawlAmount,setwithdrawlAmount]=useState("0");
     const [walletTransaction,setwalletTransaction]=useState();
     
     useFocusEffect(
@@ -74,6 +75,7 @@ function Wallet({navigation}) {
                   if(response.data.code==200){
                       try{
                         setwalletTransaction(response.data.data);
+                        //setwithdrawlAmount(response.data.withdrawbalance);
                       }catch(error){
                           console.log(error);
                       }
@@ -182,7 +184,9 @@ function Wallet({navigation}) {
                 
 
                 <View style={styles.Container}>
+                {/* <Text style={{color:"red",alignContent:"center",justifyContent:'center',alignItems:'center',fontWeight:'bold',fontSize:16}}>Note: Bonus Credit Cannot be Transferred / Withdrawn.</Text> */}
                 <View>
+                    {/* <Text style={{fontWeight:'bold',color:"#191820",marginBottom:5}}>Withdrawl Balance:{withdrawlAmount}</Text> */}
                   <Text style={{fontWeight:'bold',color:"#191820",marginBottom:5}}>Recent Transactions</Text>
                   {/* <Text style={{right:0,position:'absolute',fontWeight:'bold',fontSize:16,textDecorationLine:"underline",color:"#191820"}}>View All</Text> */}
                 </View>

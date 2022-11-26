@@ -1,5 +1,5 @@
 import React,{useState,useCallback,useEffect} from 'react';
-import { View,ScrollView,StyleSheet,Text,TextInput } from 'react-native';
+import { View,ScrollView,StyleSheet,Text,TextInput,PermissionsAndroid } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
@@ -8,6 +8,14 @@ import { xorBy } from 'lodash'
 import axios from 'axios';
 import CustButton from './button';
 import { BASE_URL } from './constants';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import RNFS from 'react-native-fs';
+import DocumentPicker, {
+  isInProgress,
+  types,
+} from 'react-native-document-picker'
+import RNFetchBlob from 'rn-fetch-blob';
+
 
 
 function Requirement({navigation}) {
@@ -17,9 +25,12 @@ function Requirement({navigation}) {
   const [loginusername,setloginusername] = useState("");
   const [loginmobile,setloginmobile] = useState("");
   const [loginemail,setloginemail] = useState("");
+  const [logindesc,setlogindesc] = useState("");
+  const [loginId,setloginId] = useState("");
   const [desc,setdesc] = useState("");
   const [title,setTitle] = useState("");
-  const[isLoading,setIsLoading]=useState(false);
+  const[isLoading,setLoading]=useState(false);
+  const [userTempId,setUserTempId] = useState("");
 
 
   useFocusEffect(
@@ -57,6 +68,13 @@ function Requirement({navigation}) {
           setloginemail(value);
         }
     })
+
+    await AsyncStorage.getItem('loginid').then(value => {
+      if(value!=null)
+      {
+        setloginId(value);
+      }
+  })
 
     await AsyncStorage.getItem('loginDesc').then(value => {
         if(value!=null)
@@ -97,8 +115,143 @@ function Requirement({navigation}) {
     }
     
     }
+    const handleError = (err) => {
+      setLoading(false);
+      if (DocumentPicker.isCancel(err)) {
+        console.warn('cancelled')
+        // User cancelled the picker, exit any dialogs or menus and move on
+      } else if (isInProgress(err)) {
+        console.warn('multiple pickers were opened, only the last will be considered')
+      } else {
+        throw err
+      }
+    }
 
+    const requestStoragePermission = async () => {
+      try {
+        setLoading(true);
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: "Storage Permission",
+            message:
+              "Please give permissions so that your audio message will be saved to your local for better experience",
+            buttonPositive: "OK"
+          }
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          pickDoc()
+        } else {
+          requestStoragePermission()
+        }
+      } catch (err) {
+        setLoading(false);
+        return true;
+        console.warn(err);
+      }
+    };
+
+    const pickDoc = async ()=>{
+
+                setLoading(true);
+                try {
+                  //picking image and getting its obj
+                  const pickerResult = await DocumentPicker.pickSingle({
+                    presentationStyle: 'fullScreen',
+                    copyTo: 'cachesDirectory',
+                    type:types.zip
+                  })
+                  var object = Object.assign({}, pickerResult);
+                  
+                  if(object.size>2000000)
+                  {
+                    alert("Please upload the file <= 1MB ");
+                    return true;
+                  }
+                  else{
+                        //converting image to base 64
+                        RNFS.readFile(object.fileCopyUri, 'base64')
+                        .then(res =>{
+                                      
+
+                          //uploading image message
+                                axios.post(BASE_URL+"sendDocChat.php", {
+                                  chatContent: res,
+                                  studentId: loginId,
+                                }, {
+                                  headers: {
+                                  
+                                  }
+                                })
+                                  .then(response => {
+                                    if(response.data.code==200){
+                                      console.log(response.data.userTempId);
+                                      setUserTempId(response.data.userTempId);
+                                      setLoading(false);
+                                    }
+                                    else
+                                    {
+                                      alert(response.data.message);
+                                      setLoading(false);
+                                      return true;
+                                    }
+                                  }).catch(error => {
+                                    console.log(error);
+                                    setLoading(false);
+                                }
+                              );
+
+                        });
+
+                  }
+                
+
+                
+
+
+                } catch (e) {
+                  handleError(e)
+              
+              }
+
+    }
   const postRequirement = async () =>{
+    setLoading(true);
+
+    axios.post(BASE_URL+"saveRequirement.php", {
+      LoginId:loginId,
+      Desc:desc,
+      Title:title,
+      SelectedTech:JSON.stringify(selectedTech),
+      UserTempId:userTempId
+    }, {
+      headers: {
+      }
+    }).then(response => {
+      
+      if(response.data.code==200){
+              try{
+                  alert(response.data.message);
+                  setLoading(false);
+                  navigation.navigate('Supporting');
+              }catch(error){
+                  console.log(error);
+                  setLoading(false);
+              }
+        }
+        else
+        {
+          alert(response.data.message);
+          setLoading(false);
+          return true;
+        }
+      }).catch(error => {
+        setLoading(false);
+        //console.log('useeffect' + error);
+    }
+   );
+
+
 
   }
     function onMultiChange() {
@@ -150,8 +303,8 @@ function Requirement({navigation}) {
                     placeholder="Title"
                     placeholderTextColor={'#bdbbbb'}
                     secureTextEntry={false}
-                    value={logindesc}
-                    name="logindesc"
+                    value={title}
+                    name="title"
                     multiline ={true}
                     numberOfLines = {4}
                     onChangeText={(text) => setTitle(text)}
@@ -162,8 +315,8 @@ function Requirement({navigation}) {
                     placeholder="Breif Description"
                     placeholderTextColor={'#bdbbbb'}
                     secureTextEntry={false}
-                    value={logindesc}
-                    name="logindesc"
+                    value={desc}
+                    name="desc"
                     multiline ={true}
                     numberOfLines = {4}
                     onChangeText={(text) => setdesc(text)}
@@ -171,7 +324,9 @@ function Requirement({navigation}) {
 
                 <View style={{alignItems:'center',justifyContent:'center',marginBottom:10}}>
                 <Text style={{fontSize:20,color:"#ffffff"}}>Upload Attachment(*zip)</Text>
+                <TouchableOpacity onPress={requestStoragePermission}>
                 <FontAwesome5 name="file-upload" size={50} color="white" style={[styles.commonTextFeatures,{marginRight:5}]}/>
+                </TouchableOpacity>
                 </View>
 
                 <CustButton
