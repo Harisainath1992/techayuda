@@ -8,6 +8,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import CustButton from './button';
 import { BASE_URL } from './constants';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 function Posted({navigation}) {
   const [loggedinusername,setLoggedinUsername]=useState();
   const [loggedinmobile,setLoggedinMobile]=useState();
@@ -96,10 +97,10 @@ function Posted({navigation}) {
                           <Text style={styles.TransIconText}>{item.taskKeyWord}</Text>
                         </View>
                         <View style={{width:"40%"}}>
-                        <Pressable onPress={() => navigation.navigate('PostedTaskDetails',{item})}>
+                        <TouchableOpacity onPress={() => navigation.navigate('PostedTaskDetails',{item})}>
                           <Text style={styles.TransferContent}>{item.Title}</Text>
                           <Text style={styles.Date}>{item.start_date} - {item.end_date}</Text>
-                        </Pressable>
+                          </TouchableOpacity>
                         </View>
                         <View style={{width:"20%"}}>
                         
@@ -134,9 +135,9 @@ function Posted({navigation}) {
         flex:1,
       }}>
         
-        
+        <TouchableOpacity>
         <MaterialCommunityIcons name="arrow-left-thin" size={40} color="white" onPress={() => navigation.navigate('Dashboard')} style={{marginTop:20,marginLeft:10,fontWeight:'normal',}}/>
-
+        </TouchableOpacity>
        <View  
       style={{
         backgroundColor:'#191820',    

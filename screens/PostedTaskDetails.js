@@ -1,5 +1,5 @@
 import React,{useCallback,useState,useEffect} from 'react';
-import { View,ScrollView,StyleSheet,Text } from 'react-native';
+import { View,ScrollView,StyleSheet,Text,TouchableOpacity } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { DataTable } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -123,7 +123,9 @@ function PostedTaskDetails({navigation,route}) {
         backgroundColor:'#191820',
         flex:1,
       }}>
+        <TouchableOpacity>
         <MaterialCommunityIcons name="arrow-left-thin" size={40} color="white" onPress={() => navigation.navigate('Posted')} style={{margin:20,fontWeight:'normal',}}/>
+        </TouchableOpacity>
         <View
             style={{
                 alignItems: 'center',
@@ -153,7 +155,7 @@ function PostedTaskDetails({navigation,route}) {
               </View>
               <View style={{flexDirection:'row'}}>
                   <Text style={{fontSize:18,fontFamily:'Lato_400Regular',color:'#191820'}}>
-                    {JSON.stringify(Techonlogies)}
+                    {Techonlogies}
                   </Text>  
               </View>
         </View>

@@ -1,35 +1,11 @@
 import React from 'react';
 import { View,ScrollView,StyleSheet,Text } from 'react-native';
-import {
-  useFonts,
-  Lato_100Thin,
-  Lato_100Thin_Italic,
-  Lato_300Light,
-  Lato_300Light_Italic,
-  Lato_400Regular,
-  Lato_400Regular_Italic,
-  Lato_700Bold,
-  Lato_700Bold_Italic,
-  Lato_900Black,
-  Lato_900Black_Italic,
-} from '@expo-google-fonts/lato';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import CustButton from './button';
 function Supporting({navigation}) {
-  let [fontsLoaded] = useFonts({
-    Lato_100Thin,
-    Lato_100Thin_Italic,
-    Lato_300Light,
-    Lato_300Light_Italic,
-    Lato_400Regular,
-    Lato_400Regular_Italic,
-    Lato_700Bold,
-    Lato_700Bold_Italic,
-    Lato_900Black,
-    Lato_900Black_Italic,
-  });
+  
     return (
       
       <View style={{

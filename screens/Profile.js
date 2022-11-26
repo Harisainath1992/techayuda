@@ -160,7 +160,9 @@ function Profile({navigation}) {
         backgroundColor:'#191820',
         flex:1,
       }}>
+        <TouchableOpacity>
         <MaterialCommunityIcons name="arrow-left-thin" size={40} color="white" onPress={() => navigation.navigate('Dashboard')} style={{margin:20,fontWeight:'normal',}}/>
+        </TouchableOpacity>
         <MaterialCommunityIcons name="logout" size={30} color="#ffffff" onPress={logout} style={{marginRight:20,top:20,fontWeight:'normal',right:0,position:'absolute'}}/>
         <View
             style={{
