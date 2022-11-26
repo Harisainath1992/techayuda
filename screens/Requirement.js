@@ -217,7 +217,18 @@ function Requirement({navigation}) {
     }
   const postRequirement = async () =>{
     setLoading(true);
-
+    if(selectedTech=="")
+    {
+      alert("Please Select Technical Skills");
+      setLoading(false);
+      return true;
+    }
+    if(title.trim()=="" || desc.trim()=="")
+    {
+      alert("Please enter Title and Description");
+      setLoading(false);
+      return true;
+    }
     axios.post(BASE_URL+"saveRequirement.php", {
       LoginId:loginId,
       Desc:desc,
@@ -284,7 +295,7 @@ function Requirement({navigation}) {
                      selectedValues={selectedTech}
                      onMultiSelect={onMultiChange()}
                      onTapClose={onMultiChange()}
-                     inputPlaceholder="Search Your Technical Skills"
+                     inputPlaceholder="Technical Skills"
                      label=""
                      multiOptionContainerStyle={{backgroundColor:"#191820",}}
                      optionContainerStyle={{backgroundColor:"#ffffff",}}
@@ -299,19 +310,17 @@ function Requirement({navigation}) {
                }
               
               <TextInput
-                    style={[styles.input,{width:"95%",margin:0,padding:5}]}
+                    style={[styles.input,{width:"95%",height:50,marginTop:20,padding:5}]}
                     placeholder="Title"
                     placeholderTextColor={'#bdbbbb'}
                     secureTextEntry={false}
                     value={title}
                     name="title"
-                    multiline ={true}
-                    numberOfLines = {4}
                     onChangeText={(text) => setTitle(text)}
                 />  
 
                   <TextInput
-                    style={[styles.input,{width:"95%",margin:0,padding:5}]}
+                    style={[styles.input,{width:"95%",marginTop:20,padding:5}]}
                     placeholder="Breif Description"
                     placeholderTextColor={'#bdbbbb'}
                     secureTextEntry={false}
