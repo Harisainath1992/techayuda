@@ -108,11 +108,11 @@ function Posted({navigation}) {
                         </View>
 
                         <View style={{width:"25%",alignContent:'center',alignItems:'center',justifyContent:'center',marginTop:-10,flexDirection:'row'}}>
-                        <Pressable onPress={() => navigation.navigate('ChatList')} style={{marginLeft:10}}>
+                        <TouchableOpacity onPress={() => navigation.navigate('ChatList',{item})} style={{marginLeft:10}}>
                           <Text style={styles.CoinsText}>
                           <MaterialCommunityIcons name="chat" size={25} color="#191820" style={{}}/>
                             </Text>
-                        </Pressable>
+                        </TouchableOpacity>
                         </View>
                     </View>
       </View>
