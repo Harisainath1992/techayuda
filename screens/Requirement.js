@@ -14,7 +14,6 @@ import DocumentPicker, {
   isInProgress,
   types,
 } from 'react-native-document-picker'
-import RNFetchBlob from 'rn-fetch-blob';
 
 
 
@@ -246,7 +245,7 @@ function Requirement({navigation}) {
               try{
                   alert(response.data.message);
                   setLoading(false);
-                  navigation.navigate('Supporting');
+                  navigation.navigate('Posted');
               }catch(error){
                   console.log(error);
                   setLoading(false);
@@ -334,7 +333,7 @@ function Requirement({navigation}) {
                 />  
 
                 <View style={{alignItems:'center',justifyContent:'center',marginBottom:100}}>
-                <Text style={{fontSize:20,color:"#ffffff",}}>Upload Attachment </Text>
+                <Text style={{fontSize:17,color:"#ffffff",}}>Upload Attachment (Click To Upload)</Text>
                 <TouchableOpacity onPress={requestStoragePermission}>
                 <FontAwesome5 name="file-upload" size={50} color="white" style={[styles.commonTextFeatures,{marginRight:5}]}/>
                 </TouchableOpacity>
@@ -353,7 +352,6 @@ function Requirement({navigation}) {
         </View>
         </ScrollView>
 
-       
         </View>
     );
 }

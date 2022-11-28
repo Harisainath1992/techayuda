@@ -6,7 +6,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
-import CustButton from './button';
 import { BASE_URL } from './constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 function Posted({navigation}) {
@@ -165,7 +164,7 @@ function Posted({navigation}) {
                     </View>
                     
                     <View  style={{position:'absolute',right:32,width:"60%",flexDirection:'row',}}>
-                      {loading ? <Text style={{color:"#ffffff"}}>loading....</Text> : ""}
+                      
                     {/* <CustButton
                         onPressFunction={() => navigation.navigate('Pending')}
                         title="Pending"
@@ -191,13 +190,13 @@ function Posted({navigation}) {
                     
 
 
-
-
-                        <FlatList
+                {loading ? <Text style={{color:"#191820"}}>loading....</Text> : <FlatList
                             data={taskValues}
                             keyExtractor={({ id }) => id}
                             renderItem={ItemRender}
-                        />
+                        />}
+
+                        
                 
                     
 

@@ -1,11 +1,13 @@
 import React,{useCallback,useState,useEffect} from 'react';
-import { View,ScrollView,StyleSheet,Text,TouchableOpacity } from 'react-native';
+import { View,ScrollView,StyleSheet,Text,TouchableOpacity,ActivityIndicator } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import { DataTable } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
+import RNFetchBlob from 'rn-fetch-blob';
+import FlashMessage,{showMessage} from "react-native-flash-message";
+import RNFS from 'react-native-fs';
 import CustButton from './button';
 import { BASE_URL } from './constants';
 
@@ -26,8 +28,11 @@ function PostedTaskDetails({navigation,route}) {
   const [TaskEndDate,setTaskEndDate]=useState();
   const [TaskCoins,setTaskCoins]=useState();
   const [TaskAssignedTo,setTaskAssignedTo]=useState();
+  const [loading,setLoading]=useState(false);
+  const [download,setDownload]=useState(false);
 
   const getData = async () =>{ try{
+    setLoading(true);
     await AsyncStorage.getItem('loginusername').then(value => {
         if(value!=null)
         {
@@ -84,11 +89,13 @@ function PostedTaskDetails({navigation,route}) {
                     setTaskAssignedTo(response.data.assigned_to);
                   }catch(error){
                       console.log(error);
+                      setLoading(false);
                   }
                             }
                 else
                 {
                   alert(response.data);
+                  setLoading(false);
                   return true;
                 }
               }).catch(error => {
@@ -98,11 +105,74 @@ function PostedTaskDetails({navigation,route}) {
 
         }
     })
+    setLoading(false);
+
     }catch(error){
     console.log(error);
+    setLoading(false);
     }
     
     }
+
+    const downloadAttachment = async () =>{
+      showMessage({
+        message: "Please wait attachment is being downloaded...",
+        type: "info",
+      });
+
+      const { config, fs } = RNFetchBlob;
+      var mainurl=taskAttachment;
+      let RootDir = fs.dirs.PictureDir;
+      let splittedData=taskAttachment.split("/");
+      let fileName = splittedData[splittedData.length - 1];
+      fileName =RootDir+'/file_' + fileName;
+      if(await RNFS.exists(fileName))
+          {
+            console.log("exists");
+          }
+          else
+          {
+            downloadFile(mainurl)
+          }
+    }
+
+
+    const downloadFile = (fileUrl) => {
+      setDownload(true)
+      // File URL which we want to download
+      let FILE_URL = fileUrl;   
+      
+      let splittedData=fileUrl.split("/");
+      let fileName = splittedData[splittedData.length - 1];
+     
+      // config: To get response by passing the downloading related options
+      // fs: Root directory path to download
+      const { config, fs } = RNFetchBlob;
+      let RootDir = fs.dirs.PictureDir;
+      let options = {
+        fileCache: true,
+        addAndroidDownloads: {
+          path:
+            RootDir+
+            '/file_' + 
+            fileName,
+          description: 'downloading file...',
+          notification: true,
+          // useDownloadManager works with Android only
+          useDownloadManager: true,   
+        },
+      };
+      config(options)
+        .fetch('GET', FILE_URL)
+        .then(res => {
+          // Alert after successful downloading
+          //console.log('res -> ', JSON.stringify(res));
+          var finalres=JSON.stringify(res);
+          console.log(JSON.parse(finalres).data)
+          setDownload(false)
+        });
+    };
+
 
     useFocusEffect(
       useCallback(() => {
@@ -133,7 +203,7 @@ function PostedTaskDetails({navigation,route}) {
                 padding:5
               }}
         >
-       
+       {loading ? <Text style={{color:"#ffffff"}}>loading....</Text> : ""}
        <View style={styles.blockdesign}>
               <View style={{flexDirection:'row',}}>
                     <Text style={{fontSize:16,marginRight:15,fontFamily:'Lato_400Regular',color:"rgba(41, 22, 49, 0.38)"}}>
@@ -233,14 +303,15 @@ function PostedTaskDetails({navigation,route}) {
               </View>
               <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
               <Text style={{fontSize:20,fontFamily:'Lato_400Regular',color:'#191820',alignItems:'center',justifyContent:'center'}}>
-                    <FontAwesome5 name="file-download" size={40} color="#191820" style={[styles.commonTextFeatures,{marginBottom:10,}]}/>
+                    <FontAwesome5 onPress={downloadAttachment} name="file-download" size={40} color="#191820" style={[styles.commonTextFeatures,{marginBottom:10,}]}/>
                     </Text> 
+                    {download ? <ActivityIndicator color={"#191820"} sytle={{}}></ActivityIndicator> : ""}
               </View>
         </View>
         
                 <CustButton
                 onPressFunction={() => navigation.navigate('UpdateTask')}
-                title="Close"
+                title="Delete"
                 width="85%"
                 ></CustButton>
                 
@@ -250,7 +321,7 @@ function PostedTaskDetails({navigation,route}) {
         </View>
         </ScrollView>
 
-       
+        <FlashMessage position="top" />
         </View>
     );
 }
