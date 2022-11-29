@@ -103,10 +103,14 @@ function ChatList({navigation,route}) {
                     </View>
                 <View style={{width:"40%",alignContent:'center',alignItems:'center',justifyContent:'center',marginTop:-10,flexDirection:'row'}}>
                     <Text style={[styles.CoinsText,{marginRight:25}]}>
-                    <MaterialCommunityIcons name="chat" size={30} color="#191820" style={{}}/>
+                        <TouchableOpacity onPress={() => navigation.navigate('ChatScreen',{item})}>
+                            <MaterialCommunityIcons name="chat" size={30} color="#191820" style={{}}/>
+                        </TouchableOpacity>
                         </Text>
                     <Text style={styles.CoinsText}>
-                        <FontAwesome5 name="check-circle" size={25} color="#191820" style={{}}/>
+                        <TouchableOpacity>
+                            <FontAwesome5 name="check-circle" size={25} color="#191820" style={{}}/>
+                        </TouchableOpacity>
                     </Text>
                     </View>
             </View>
