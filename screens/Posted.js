@@ -1,7 +1,6 @@
 import React,{useCallback,useState,useEffect} from 'react';
 import { View,ScrollView,StyleSheet,Text,FlatList } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';

@@ -66,7 +66,7 @@ function ChatList({navigation,route}) {
             }).then(response => {
               if(response.data.code==200){
                   try{
-                    setTaskAcceptedUser(response.data.name);
+                    setTaskAcceptedUser(response.data.user);
                   }catch(error){
                       console.log(error);
                       setLoading(false);
@@ -96,7 +96,7 @@ function ChatList({navigation,route}) {
     const ItemRender = ({ item,index }) => (
         <View style={styles.MainContainer}>
                     <View style={styles.CreditNote}>
-                    <Text style={styles.TransIconText}>{index}</Text>
+                    <Text style={styles.TransIconText}>{item.sno}</Text>
                     </View>
                     <View style={{width:"50%"}}>
                     <Text style={styles.TransferContent}>{item.name}</Text>
