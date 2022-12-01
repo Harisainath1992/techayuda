@@ -1,39 +1,134 @@
-import React from 'react';
-import { View,ScrollView,StyleSheet,Text,Dimensions } from 'react-native';
-import {
-  useFonts,
-  Lato_100Thin,
-  Lato_100Thin_Italic,
-  Lato_300Light,
-  Lato_300Light_Italic,
-  Lato_400Regular,
-  Lato_400Regular_Italic,
-  Lato_700Bold,
-  Lato_700Bold_Italic,
-  Lato_900Black,
-  Lato_900Black_Italic,
-} from '@expo-google-fonts/lato';
+import React,{useCallback,useState,useEffect} from 'react';
+import { View,ScrollView,StyleSheet,Text,Dimensions,TouchableOpacity,FlatList,SafeAreaView  } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+import axios from 'axios';
+import { BASE_URL } from './constants';
 
-function ChatList({navigation}) {
-  let [fontsLoaded] = useFonts({
-    Lato_100Thin,
-    Lato_100Thin_Italic,
-    Lato_300Light,
-    Lato_300Light_Italic,
-    Lato_400Regular,
-    Lato_400Regular_Italic,
-    Lato_700Bold,
-    Lato_700Bold_Italic,
-    Lato_900Black,
-    Lato_900Black_Italic,
-  });
+function ChatList({navigation,route}) {
+  const {item}=route.params;
   let ScreenHeight = Dimensions.get("window").height;
+  const [loggedinusername,setLoggedinUsername]=useState();
+  const [loggedinmobile,setLoggedinMobile]=useState();
+  const [loggedinemail,setLoggedinEmail]=useState();
+  const [loggedindesc,setLoggedindesc]=useState();
+  const [loginid,setloginid]=useState();
+  const [loading,setLoading]=useState(false);
+  const [taskAcceptedUser,setTaskAcceptedUser]=useState("");
+
+  const getData = async () =>{ try{
+    setLoading(true);
+    await AsyncStorage.getItem('loginusername').then(value => {
+        if(value!=null)
+        {
+            setLoggedinUsername(value);
+        }
+        else
+        {
+            navigation.navigate('Login');
+        }
+    })
+    
+    await AsyncStorage.getItem('loginmobile').then(value => {
+        if(value!=null)
+        {
+            setLoggedinMobile(value);
+        }
+    })
+    
+    await AsyncStorage.getItem('loginemail').then(value => {
+        if(value!=null)
+        {
+            setLoggedinEmail(value);
+        }
+    })
+
+    await AsyncStorage.getItem('loginDesc').then(value => {
+        if(value!=null)
+        {
+            setLoggedindesc(value);
+        }
+    })
+
+    await AsyncStorage.getItem('loginid').then(value => {
+        if(value!=null)
+        {
+            setloginid(value);
+
+            axios.post(BASE_URL+"getTaskAcceptedList.php", {
+              TaskId: item.id,
+            }, {
+              headers: {
+                
+              }
+            }).then(response => {
+              if(response.data.code==200){
+                  try{
+                    setTaskAcceptedUser(response.data.user);
+                  }catch(error){
+                      console.log(error);
+                      setLoading(false);
+                  }
+                            }
+                else
+                {
+                  alert(response.data);
+                  setLoading(false);
+                  return true;
+                }
+              }).catch(error => {
+                //console.log('useeffect' + error);
+            }
+            );
+
+        }
+    })
+    setLoading(false);
+
+    }catch(error){
+    console.log(error);
+    setLoading(false);
+    }
+    
+    }
+    const ItemRender = ({ item,index }) => (
+        <View style={styles.MainContainer}>
+                    <View style={styles.CreditNote}>
+                    <Text style={styles.TransIconText}>{item.sno}</Text>
+                    </View>
+                    <View style={{width:"50%"}}>
+                    <Text style={styles.TransferContent}>{item.name}</Text>
+                    </View>
+                <View style={{width:"40%",alignContent:'center',alignItems:'center',justifyContent:'center',marginTop:-10,flexDirection:'row'}}>
+                    <Text style={[styles.CoinsText,{marginRight:25}]}>
+                        <TouchableOpacity onPress={() => navigation.navigate('ChatScreen',{item})}>
+                            <MaterialCommunityIcons name="chat" size={30} color="#191820" style={{}}/>
+                        </TouchableOpacity>
+                        </Text>
+                    <Text style={styles.CoinsText}>
+                        <TouchableOpacity>
+                            <FontAwesome5 name="check-circle" size={25} color="#191820" style={{}}/>
+                        </TouchableOpacity>
+                    </Text>
+                    </View>
+            </View>
+      );
+    
+    useFocusEffect(
+    useCallback(() => {
+        getData()
+    }, [])
+    );
+    useEffect(() => {
+    console.log(taskAcceptedUser);
+    }, [])
+
     return (
     <View style={{flex:1}}>
        <View style={{height: ScreenHeight,backgroundColor:'#191820',}} >
-        <ScrollView  
+        <SafeAreaView   
         contentContainerStyle={{ flexWrap: 'nowrap' }} 
         style={{
             backgroundColor:'#191820',
@@ -55,125 +150,22 @@ function ChatList({navigation}) {
                             Request Accepted Supporters
                         </Text>    
                     </View>
-                    <ScrollView contentContainerStyle={{ flexWrap: 'nowrap' }} style={{height: ScreenHeight-250}}>
+                    <SafeAreaView  contentContainerStyle={{ flexWrap: 'nowrap' }} style={{height: ScreenHeight-250}}>
                     
-                    <View style={styles.MainContainer}>
-                            <View style={styles.CreditNote}>
-                            <Text style={styles.TransIconText}>1</Text>
-                            </View>
-                            <View style={{width:"50%"}}>
-                            <Text style={styles.TransferContent}>Hari Sainath</Text>
-                            </View>
-                        <View style={{width:"40%",alignContent:'center',alignItems:'center',justifyContent:'center',marginTop:-10,flexDirection:'row'}}>
-                            <Text style={[styles.CoinsText,{marginRight:25}]}>
-                            <MaterialCommunityIcons name="chat" size={30} color="#191820" style={{}}/>
-                                </Text>
-                            <Text style={styles.CoinsText}>
-                                <FontAwesome5 name="check-circle" size={25} color="#191820" style={{}}/>
-                            </Text>
-                            </View>
-                    </View>
+                    
+                    {loading ? <Text style={{color:"#191820"}}>loading....</Text> : <FlatList
+                            data={taskAcceptedUser}
+                            keyExtractor={({ id }) => id}
+                            renderItem={ItemRender}
+                        />}
 
-
-                    <View style={styles.MainContainer}>
-                            <View style={styles.CreditNote}>
-                            <Text style={styles.TransIconText}>2</Text>
-                            </View>
-                            <View style={{width:"50%"}}>
-                            <Text style={styles.TransferContent}>Hari Sainath</Text>
-                            </View>
-                        <View style={{width:"40%",alignContent:'center',alignItems:'center',justifyContent:'center',marginTop:-10,flexDirection:'row'}}>
-                            <Text style={[styles.CoinsText,{marginRight:25}]}>
-                            <MaterialCommunityIcons name="chat" size={30} color="#191820" style={{}}/>
-                                </Text>
-                            <Text style={styles.CoinsText}>
-                                <FontAwesome5 name="check-circle" size={25} color="#191820" style={{}}/>
-                            </Text>
-                            </View>
-                    </View>
-
-
-                    <View style={styles.MainContainer}>
-                            <View style={styles.CreditNote}>
-                            <Text style={styles.TransIconText}>3</Text>
-                            </View>
-                            <View style={{width:"50%"}}>
-                            <Text style={styles.TransferContent}>Hari Sainath</Text>
-                            </View>
-                        <View style={{width:"40%",alignContent:'center',alignItems:'center',justifyContent:'center',marginTop:-10,flexDirection:'row'}}>
-                            <Text style={[styles.CoinsText,{marginRight:25}]}>
-                            <MaterialCommunityIcons name="chat" size={30} color="#191820" style={{}}/>
-                                </Text>
-                            <Text style={styles.CoinsText}>
-                                <FontAwesome5 name="check-circle" size={25} color="#191820" style={{}}/>
-                            </Text>
-                            </View>
-                    </View>
-
-
-
-                    <View style={styles.MainContainer}>
-                            <View style={styles.CreditNote}>
-                            <Text style={styles.TransIconText}>4</Text>
-                            </View>
-                            <View style={{width:"50%"}}>
-                            <Text style={styles.TransferContent}>Hari Sainath</Text>
-                            </View>
-                        <View style={{width:"40%",alignContent:'center',alignItems:'center',justifyContent:'center',marginTop:-10,flexDirection:'row'}}>
-                            <Text style={[styles.CoinsText,{marginRight:25}]}>
-                            <MaterialCommunityIcons name="chat" size={30} color="#191820" style={{}}/>
-                                </Text>
-                            <Text style={styles.CoinsText}>
-                                <FontAwesome5 name="check-circle" size={25} color="#191820" style={{}}/>
-                            </Text>
-                            </View>
-                    </View>
-
-
-
-                    <View style={styles.MainContainer}>
-                            <View style={styles.CreditNote}>
-                            <Text style={styles.TransIconText}>5</Text>
-                            </View>
-                            <View style={{width:"50%"}}>
-                            <Text style={styles.TransferContent}>Hari Sainath</Text>
-                            </View>
-                        <View style={{width:"40%",alignContent:'center',alignItems:'center',justifyContent:'center',marginTop:-10,flexDirection:'row'}}>
-                            <Text style={[styles.CoinsText,{marginRight:25}]}>
-                            <MaterialCommunityIcons name="chat" size={30} color="#191820" style={{}}/>
-                                </Text>
-                            <Text style={styles.CoinsText}>
-                                <FontAwesome5 name="check-circle" size={25} color="#191820" style={{}}/>
-                            </Text>
-                            </View>
-                    </View>
-
-
-
-                    <View style={styles.MainContainer}>
-                            <View style={styles.CreditNote}>
-                            <Text style={styles.TransIconText}>6</Text>
-                            </View>
-                            <View style={{width:"50%"}}>
-                            <Text style={styles.TransferContent}>Hari Sainath</Text>
-                            </View>
-                        <View style={{width:"40%",alignContent:'center',alignItems:'center',justifyContent:'center',marginTop:-10,flexDirection:'row'}}>
-                            <Text style={[styles.CoinsText,{marginRight:25}]}>
-                            <MaterialCommunityIcons name="chat" size={30} color="#191820" style={{}}/>
-                                </Text>
-                            <Text style={styles.CoinsText}>
-                                <FontAwesome5 name="check-circle" size={25} color="#191820" style={{}}/>
-                            </Text>
-                            </View>
-                    </View>
-                   
-                    </ScrollView>
+                    </SafeAreaView >
                 </View>
 
 
 
             </View>
-            </ScrollView>
+            </SafeAreaView >
 
         </View> 
 

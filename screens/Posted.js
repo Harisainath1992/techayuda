@@ -1,13 +1,12 @@
 import React,{useCallback,useState,useEffect} from 'react';
 import { View,ScrollView,StyleSheet,Text,FlatList } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
-import CustButton from './button';
 import { BASE_URL } from './constants';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 function Posted({navigation}) {
   const [loggedinusername,setLoggedinUsername]=useState();
   const [loggedinmobile,setLoggedinMobile]=useState();
@@ -16,8 +15,9 @@ function Posted({navigation}) {
   const [loginid,setloginid]=useState();
   const [taskValues,setTaskValues]=useState();
   const [taskCount,settaskCount]=useState("0");
-
+  const [loading,setLoading]=useState(false);
   const getData = async () =>{ try{
+    setLoading(true);
     await AsyncStorage.getItem('loginusername').then(value => {
         if(value!=null)
         {
@@ -84,7 +84,7 @@ function Posted({navigation}) {
     }catch(error){
     console.log(error);
     }
-    
+    setLoading(false);
     }
   
     const ItemRender = ({ item }) => (
@@ -95,10 +95,10 @@ function Posted({navigation}) {
                           <Text style={styles.TransIconText}>{item.taskKeyWord}</Text>
                         </View>
                         <View style={{width:"40%"}}>
-                        <Pressable onPress={() => navigation.navigate('PostedTaskDetails')}>
+                        <TouchableOpacity onPress={() => navigation.navigate('PostedTaskDetails',{item})}>
                           <Text style={styles.TransferContent}>{item.Title}</Text>
                           <Text style={styles.Date}>{item.start_date} - {item.end_date}</Text>
-                        </Pressable>
+                          </TouchableOpacity>
                         </View>
                         <View style={{width:"20%"}}>
                         
@@ -107,11 +107,11 @@ function Posted({navigation}) {
                         </View>
 
                         <View style={{width:"25%",alignContent:'center',alignItems:'center',justifyContent:'center',marginTop:-10,flexDirection:'row'}}>
-                        <Pressable onPress={() => navigation.navigate('ChatList')} style={{marginLeft:10}}>
+                        <TouchableOpacity onPress={() => navigation.navigate('ChatList',{item})} style={{marginLeft:10}}>
                           <Text style={styles.CoinsText}>
                           <MaterialCommunityIcons name="chat" size={25} color="#191820" style={{}}/>
                             </Text>
-                        </Pressable>
+                        </TouchableOpacity>
                         </View>
                     </View>
       </View>
@@ -133,9 +133,9 @@ function Posted({navigation}) {
         flex:1,
       }}>
         
-        
+        <TouchableOpacity>
         <MaterialCommunityIcons name="arrow-left-thin" size={40} color="white" onPress={() => navigation.navigate('Dashboard')} style={{marginTop:20,marginLeft:10,fontWeight:'normal',}}/>
-
+        </TouchableOpacity>
        <View  
       style={{
         backgroundColor:'#191820',    
@@ -163,6 +163,7 @@ function Posted({navigation}) {
                     </View>
                     
                     <View  style={{position:'absolute',right:32,width:"60%",flexDirection:'row',}}>
+                      
                     {/* <CustButton
                         onPressFunction={() => navigation.navigate('Pending')}
                         title="Pending"
@@ -188,13 +189,13 @@ function Posted({navigation}) {
                     
 
 
-
-
-                        <FlatList
+                {loading ? <Text style={{color:"#191820"}}>loading....</Text> : <FlatList
                             data={taskValues}
                             keyExtractor={({ id }) => id}
                             renderItem={ItemRender}
-                        />
+                        />}
+
+                        
                 
                     
 
