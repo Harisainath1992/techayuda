@@ -134,7 +134,7 @@ function Requirement({navigation}) {
           {
             title: "Storage Permission",
             message:
-              "Please give permissions so that your audio message will be saved to your local for better experience",
+              "Please give permissions so that your attachments will be saved to your local device",
             buttonPositive: "OK"
           }
         );

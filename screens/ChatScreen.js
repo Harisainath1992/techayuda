@@ -1,16 +1,21 @@
 import React,{useCallback,useState,useEffect} from 'react';
-import { View,ScrollView,StyleSheet,Text,FlatList,TouchableOpacity,ActivityIndicator } from 'react-native';
+import { View,TextInput,StyleSheet,Text,FlatList,TouchableOpacity,ActivityIndicator,PermissionsAndroid } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
+import DocumentPicker, {
+  isInProgress,
+  types,
+} from 'react-native-document-picker'
+import RNFS from 'react-native-fs';
 import { BASE_URL } from './constants';
 
 
 function ChatScreen({navigation,route}) {
     const {item}=route.params;
-    var initialid=item.id;
     const [loggedinusername,setLoggedinUsername]=useState();
     const [loggedinmobile,setLoggedinMobile]=useState();
     const [loggedinemail,setLoggedinEmail]=useState();
@@ -19,7 +24,10 @@ function ChatScreen({navigation,route}) {
     const [loading,setLoading]=useState(false);
     const [chatting,setChatting]=useState();
     const [download,setDownload]=useState(false);
-
+    const [text, onChangeText] = useState("");
+    const [tableName, setTableName] = useState("");
+    
+    
   const getData = async () =>{ try{
     setLoading(true);
     await AsyncStorage.getItem('loginusername').then(value => {
@@ -69,6 +77,7 @@ function ChatScreen({navigation,route}) {
               if(response.data.code==200){
                   try{
                     setChatting(response.data.chatting);
+                    setTableName(response.data.tableName);
                     setLoading(false);
                   }catch(error){
                       console.log(error);
@@ -114,19 +123,19 @@ function ChatScreen({navigation,route}) {
         <View style={{}}>
          {item.chatType==1 ? 
          <View style={{width:"100%",padding:5}}>
-           <Text style={[styles.chatContentHeader]}>{item.user_id==initialid ? "You" : item.Consultant_Name} <Text style={{fontSize:8,alignContent:"center",alignItems:"center",justifyContent:"center",color:"#BBBBBB"}}> {formatDate(item.created_at)}</Text></Text>
+           <Text style={[item.user_id==loginid ? styles.chatContentHeader : styles.chatContentHeaderAdmin]}>{item.user_id==loginid ? "You" : item.Consultant_Name} <Text style={{fontSize:8,alignContent:"center",alignItems:"center",justifyContent:"center",color:"#BBBBBB"}}> {formatDate(item.created_at)}</Text></Text>
            
-           <View style={[item.user_id==initialid ? styles.chatContent : styles.chatContentAdmin,{}]}>
-           <Text style={[item.user_id==initialid ? styles.chatContentColor : styles.chatContentAdminColor]}> {item.chatContent}</Text>
+           <View style={[item.user_id==loginid ? styles.chatContent : styles.chatContentAdmin,{}]}>
+           <Text style={[item.user_id==loginid ? styles.chatContentColor : styles.chatContentAdminColor]}> {item.chatContent}</Text>
            </View>
          </View> : ""}
        
          {item.chatType==2 ? 
            <View style={{width:"100%",padding:5}}>
-           <Text style={[styles.chatContentHeader]}>{item.user_id==initialid ? "You" : item.Consultant_Name} <Text style={{fontSize:8,alignContent:"center",alignItems:"center",justifyContent:"center",color:"#BBBBBB"}}> {formatDate(item.created_at)}</Text></Text>
-           <Text style={item.user_id==initialid ? styles.chatContent : styles.chatContentAdmin}> 
-           <TouchableOpacity onPress={pauseAudio}><FontAwesome5 name="file-download" size={40} color="#2596be" style={{margin:10,fontWeight:'normal',}}/></TouchableOpacity> 
-           {download ? <ActivityIndicator color={"#2596be"} sytle={{}}></ActivityIndicator> : ""}
+           <Text style={[styles.chatContentHeader]}>{item.user_id==loginid ? "You" : item.Consultant_Name} <Text style={{fontSize:8,alignContent:"center",alignItems:"center",justifyContent:"center",color:"#BBBBBB"}}> {formatDate(item.created_at)}</Text></Text>
+           <Text style={item.user_id==loginid ? styles.chatContent : styles.chatContentAdmin}> 
+           <TouchableOpacity><FontAwesome5 name="file-download" size={40} color="#191820" style={{margin:10,fontWeight:'normal',}}/></TouchableOpacity> 
+           {download ? <ActivityIndicator color={"#191820"} sytle={{}}></ActivityIndicator> : ""}
            </Text>
          </View> : ""
        }
@@ -142,6 +151,148 @@ function ChatScreen({navigation,route}) {
         useEffect(() => {
         console.log(chatting);
         }, [])
+        const handleError = (err) => {
+          setLoading(false);
+          if (DocumentPicker.isCancel(err)) {
+            console.warn('cancelled')
+            // User cancelled the picker, exit any dialogs or menus and move on
+          } else if (isInProgress(err)) {
+            console.warn('multiple pickers were opened, only the last will be considered')
+          } else {
+            throw err
+          }
+        }
+        const requestCameraPermission = async () => {
+
+          try {
+            setLoading(true);
+            const granted = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+              {
+                title: "Storage Permission",
+                message:
+                  "Please give permissions so that your attachments will be saved to your local device",
+                buttonPositive: "OK"
+              }
+            );
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+              pickDoc()
+            } else {
+              requestCameraPermission()
+            }
+          } catch (err) {
+            setLoading(false);
+            return true;
+            console.warn(err);
+          }
+          };
+
+
+          const pickDoc = async ()=>{
+            setLoading(true);
+              try {
+                //picking image and getting its obj
+                const pickerResult = await DocumentPicker.pickSingle({
+                  presentationStyle: 'fullScreen',
+                  copyTo: 'cachesDirectory',
+                  type:types.allFiles
+                })
+                var object = Object.assign({}, pickerResult);
+                
+                if(object.size>5000000)
+                {
+                  alert("Please upload the file <= 5MB ");
+                  return true;
+                }
+                else{
+                      //converting image to base 64
+                      RNFS.readFile(object.fileCopyUri, 'base64')
+                      .then(res =>{
+                                    
+          
+                        //uploading image message
+                              axios.post(BASE_URL+"sendDocChatFile.php", {
+                                chatContent: res,
+                                loginid: loginid,
+                                fileType:object.type,
+                                chatType:2,
+                                userid: item.user_id,
+                                tableName:tableName,
+                              }, {
+                                headers: {
+                                
+                                }
+                              })
+                                .then(response => {
+                                  if(response.data.code==200){
+                                    console.log(response.data);
+                                    getData();
+                                    setLoading(false);
+                                  }
+                                  else
+                                  {
+                                    alert(response.data.message);
+                                    return true;
+                                    setLoading(false);
+                                  }
+                                }).catch(error => {
+                                  console.log(error);
+                                  setLoading(false);
+                              }
+                            );
+          
+                      });
+          
+                }
+              
+          
+               
+          
+          
+              } catch (e) {
+                handleError(e)
+            
+            }
+          }
+
+          async function sendChatContent() {
+            setLoading(true);
+            //console.log('Stopping recording..');
+          
+          
+             //uploading Text message
+             axios.post(BASE_URL+"sendText.php", {
+              chatContent: text,
+              loginid: loginid,
+              chatType:1,
+              userid: item.user_id,
+              tableName:tableName,
+            }, {
+              headers: {
+              
+              }
+            })
+              .then(response => {
+        
+                if(response.data.code==200){
+                  getData();
+                  setLoading(false);
+                  onChangeText("");
+                }
+                else
+                {
+                  alert(response.data.message);
+                  return true;
+                }
+              }).catch(error => {
+                console.log(error);
+            }
+          );
+        
+          
+          
+          }
+
 
     return (
       
@@ -163,25 +314,41 @@ function ChatScreen({navigation,route}) {
 
                 
 
-                <View style={styles.Container}>
-                <ScrollView contentContainerStyle={{ flexWrap: 'nowrap' }} style={{}}>
-                        
-                            <View style={styles.MainContainer}>
-                                
-                                
-                            <FlatList 
-                            data={chatting}
-                            key={'#'}
-                            keyExtractor={({ id }, index) => id}
-                            renderItem={renderItem}
-                            inverted
-                            contentContainerStyle={{ flexDirection: 'column-reverse' }} 
-                            />
-                            {loading ? <ActivityIndicator color={"#2596be"} sytle={{}}></ActivityIndicator>:""}
+                <View style={styles.Container}>                                
+                    <FlatList 
+                    data={chatting}
+                    key={'#'}
+                    keyExtractor={({ id }, index) => id}
+                    renderItem={renderItem}
+                    inverted
+                    contentContainerStyle={{ flexDirection: 'column-reverse' }} 
+                    />
+                    {loading ? <ActivityIndicator color={"#191820"} sytle={{}}></ActivityIndicator>:""}
 
-                            </View>
-                        
-                </ScrollView>
+                  
+
+                    <View style={{width:"100%",flexDirection:'row',height:"10%",alignItems:'center',justifyContent:'center',bottom:0,marginTop:"2%"}}>
+
+                      <TouchableOpacity  onPress={requestCameraPermission} style={{left:0,}}>
+                      <MaterialIcons name="attach-file" size={30} color="#191820" style={{fontWeight:'normal',}}/>
+                      </TouchableOpacity >
+
+                          <TextInput
+                              style={[styles.input,{width:"77%",}]}
+                              placeholder="Type here...."
+                              multiline={true}
+                              onChangeText={onChangeText}
+                              value={text}
+                              placeholderTextColor={'#191820'}
+                          />
+
+                          <TouchableOpacity  style={{right:0,}} onPressOut={sendChatContent}>
+                            <MaterialCommunityIcons name="send-circle" size={40} color="#191820" style={{fontWeight:'normal',}}/>
+                          </TouchableOpacity>
+
+                      </View>
+
+                
                 </View>
         </View>
 
@@ -266,20 +433,43 @@ pressableButton:{
     padding:5,
     borderRadius:8,
     fontSize:16,
-    backgroundColor:"#2596be",
+    backgroundColor:"#191820",
     color:"#ffffff",
-    width:"100%"
+    width:"100%",
+    alignContent:'flex-end',
+    alignItems:'flex-end',
   },
   chatContentHeader:{
-    padding:5,
+    padding:0,
     borderRadius:8,
     fontWeight:'bold',
+  },
+  chatContentHeaderAdmin:{
+    padding:0,
+    borderRadius:8,
+    fontWeight:'bold',
+    alignContent:'flex-end',
+    alignItems:'flex-end',
+    textAlign:'right'
   },
   chatContentColor:{
     color:"#000000"
   },
   chatContentAdminColor:{
     color:"#ffffff"
+  },
+  input: {
+    marginTop:2,
+    borderWidth: 1,
+    paddingLeft: 5,
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderColor:'#191820',
+    color:"#191820",
+    fontFamily:'Lato_400Regular',
+    fontWeight:'600',
+    borderRadius:6,
+    backgroundColor:'#d5edf5',
   },
 });
 
