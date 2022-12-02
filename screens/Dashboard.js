@@ -7,6 +7,7 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 const window = Dimensions.get('window');
@@ -64,16 +65,17 @@ function Dashboard({navigation}) {
         }, [])
       );
     return (
-    <View style={{flex:1}}>
+        <ScrollView  style={{flex:1}}>
         
        <View  
       style={{
         backgroundColor:'#191820',    
         alignContent:'center',
         justifyContent:'center',
-        flex:1
+        flex:1,
       }}>
-        <View style={{flexDirection:"row",width:"100%",marginBottom:40}}>
+        
+        <View style={{flexDirection:"row",width:"100%",marginBottom:10,marginTop:40,height:"5%"}}>
         
             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
                 <View style={{left:20,top:10,}}>
@@ -93,7 +95,8 @@ function Dashboard({navigation}) {
                     style={{
                         alignItems: 'center',
                         justifyContent:'center',
-                        padding:30
+                        padding:30,
+                        height:"10%"
                     }}
                 >
                     
@@ -109,61 +112,51 @@ function Dashboard({navigation}) {
 
 
                 
-
-                <View style={{padding:50,backgroundColor:'#ffffff',borderTopEndRadius:25,borderTopStartRadius:25,marginTop:30,height:"77%"}}>
-
-                <View style={{flexDirection:"row"}}>
                 
+                <View style={{padding:50,backgroundColor:'#ffffff',borderTopEndRadius:25,borderTopStartRadius:25,marginTop:30,height:"85%"}}>
+
+              
                 
-                <Pressable style={[styles.pressableButton]} onPress={() => navigation.navigate('Requirement')}>
+                <TouchableOpacity style={[styles.pressableButton]} onPress={() => navigation.navigate('Requirement')}>
                   <Text style={styles.loginText}>Post Your Requirement</Text>
-                </Pressable>
-
-                </View>
+                </TouchableOpacity>
 
 
                         <View style={[styles.innerContainer]}>
                                     <Pressable android_ripple={{color:'#191820',borderColor:'#191820',borderWidth:1,backgroundColor:'#ffffff'}} onPress={() => navigation.navigate('Supporting')} style={[styles.taskContainer,{backgroundColor:"#191820",marginRight:20}]}>
                                     <View style={{}}>
-                                        <MaterialIcons name="support" size={65} color="white" style={[styles.commonTextFeatures,{marginBottom:10}]}/>
+                                        <MaterialIcons name="support" size={55} color="white" style={[styles.commonTextFeatures,{marginBottom:10}]}/>
                                         <Text style={[styles.commonTextFeatures,{fontWeight:'bold'}]}>Your Supporting Requirements</Text>    
                                     </View> 
                                     </Pressable>
                                     <Pressable android_ripple={{color:'#ffffff'}} onPress={() => navigation.navigate('Posted')} style={[styles.taskContainer,{backgroundColor:"#191820"}]}>
                                     <View style={{}}>
-                                    <MaterialCommunityIcons name="post-outline" size={65} color="white" style={[styles.commonTextFeatures,{marginBottom:10}]}/>
-                                        <Text style={styles.commonTextFeatures}>Your Posted Requirements</Text>    
+                                    <MaterialCommunityIcons name="post-outline" size={55} color="white" style={[styles.commonTextFeatures,{marginBottom:10}]}/>
+                                        <Text style={[styles.commonTextFeatures,{fontWeight:'bold'}]}>Your Posted Requirements</Text>    
+                                    </View> 
+                                    </Pressable>
+
+                                    <Pressable android_ripple={{color:'#ffffff'}} onPress={() => navigation.navigate('Accepted')} style={[styles.taskContainer,{backgroundColor:"#191820"}]}>
+                                    <View style={{}}>
+                                    <MaterialCommunityIcons name="post-outline" size={55} color="white" style={[styles.commonTextFeatures,{marginBottom:10}]}/>
+                                        <Text style={[styles.commonTextFeatures,{fontWeight:'bold'}]}>Your Accepted Requirements</Text>    
                                     </View> 
                                     </Pressable>
                         </View>
-                        {/* <View style={[styles.innerContainer]}>
-                                    <Pressable android_ripple={{color:'#ffffff'}} onPress={() => navigation.navigate('Wallet')} style={[styles.taskContainer,{backgroundColor:"#191820",marginRight:20}]}>
-                                        <View style={{}}>
-                                        <FontAwesome5 name="coins" size={35} color="white" style={[styles.commonTextFeatures,{marginBottom:10}]}/>
-                                        <Text style={styles.commonTextFeatures}>Total</Text>    
-                                        <Text style={styles.commonTextFeatures}>Transactions</Text>    
-                                        </View>  
-                                    </Pressable>
-                                    
-
-                                    <Pressable android_ripple={{color:'#ffffff'}} onPress={() => navigation.navigate('Withdrawl')} style={[styles.taskContainer,{backgroundColor:"#191820"}]}>
-                                    <View>
-                                    <FontAwesome5 name="check-double" size={35} color="white" style={[styles.commonTextFeatures,{marginBottom:10}]}/>
-                                        <Text style={styles.commonTextFeatures}>Withdrawl</Text>    
-                                        <Text style={styles.commonTextFeatures}>Request</Text>    
-                                    </View> 
-                                    </Pressable>
-                        </View> */}
+                        
                  </View>
+
+
                 <View>
                     
                 </View>
-
+        
+       
 
         </View>
 
        
-        </View>
+        </ScrollView>
     );
 }
 
@@ -174,7 +167,7 @@ const styles = StyleSheet.create({
         alignContent:'center',
         justifyContent:'center',
         width:"100%",
-        height:130,
+        height:110,
         borderRadius:30,
         alignContent:'center',
         justifyContent:'center',
@@ -183,9 +176,7 @@ const styles = StyleSheet.create({
         marginBottom:20
     },
     innerContainer:{
-        backgroundColor:'#ffffff',
-        width:"100%",
-        
+
         alignContent:'center',
         justifyContent:'center',
     },
@@ -213,7 +204,7 @@ const styles = StyleSheet.create({
         width:"99%",
         borderRadius:30,
         marginRight:5,
-        marginBottom:40,
+        marginBottom:30,
         borderColor:'#191820',
         borderWidth:1,
       },
