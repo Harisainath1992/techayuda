@@ -5,12 +5,14 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import FlashMessage,{showMessage} from "react-native-flash-message";
 import axios from 'axios';
 import DocumentPicker, {
   isInProgress,
   types,
 } from 'react-native-document-picker'
 import RNFS from 'react-native-fs';
+import RNFetchBlob from 'rn-fetch-blob';
 import { BASE_URL } from './constants';
 
 
@@ -26,7 +28,9 @@ function ChatScreen({navigation,route}) {
     const [download,setDownload]=useState(false);
     const [text, onChangeText] = useState("");
     const [tableName, setTableName] = useState("");
-    
+    var Hours="";
+    var Sec = "";
+    var Min = "";
     
   const getData = async () =>{ try{
     setLoading(true);
@@ -117,6 +121,47 @@ function ChatScreen({navigation,route}) {
       
         return day+'-'+month+'-'+year+" "+Hours+':'+Min+':'+Sec;
       }
+
+
+    function downloadFile(fileUrl){
+      setDownload(true)
+      // File URL which we want to download
+      let FILE_URL = fileUrl;   
+      
+      let splittedData=fileUrl.split("/");
+      let fileName = splittedData[splittedData.length - 1];
+     
+      // config: To get response by passing the downloading related options
+      // fs: Root directory path to download
+      const { config, fs } = RNFetchBlob;
+      let RootDir = fs.dirs.PictureDir;
+      let options = {
+        fileCache: true,
+        addAndroidDownloads: {
+          path:
+            RootDir+
+            '/file_' + 
+            fileName,
+          description: 'downloading file...',
+          notification: true,
+          // useDownloadManager works with Android only
+          useDownloadManager: true,   
+        },
+      };
+      config(options)
+        .fetch('GET', FILE_URL)
+        .then(res => {
+          // Alert after successful downloading
+          //console.log('res -> ', JSON.stringify(res));
+          var finalres=JSON.stringify(res);
+          console.log(JSON.parse(finalres).data);
+          
+          setDownload(false)
+        });
+    };
+
+
+
     const renderItem = ({ item }) => {
   
         return( 
@@ -134,11 +179,13 @@ function ChatScreen({navigation,route}) {
            <View style={{width:"100%",padding:5}}>
            <Text style={[styles.chatContentHeader]}>{item.user_id==loginid ? "You" : item.Consultant_Name} <Text style={{fontSize:8,alignContent:"center",alignItems:"center",justifyContent:"center",color:"#BBBBBB"}}> {formatDate(item.created_at)}</Text></Text>
            <Text style={item.user_id==loginid ? styles.chatContent : styles.chatContentAdmin}> 
-           <TouchableOpacity><FontAwesome5 name="file-download" size={40} color="#191820" style={{margin:10,fontWeight:'normal',}}/></TouchableOpacity> 
+           <TouchableOpacity onPress={()=>downloadFile(item.chatContent)}><FontAwesome5 name="file-download" size={40} color="#191820" style={{margin:10,fontWeight:'normal',}}/></TouchableOpacity> 
            {download ? <ActivityIndicator color={"#191820"} sytle={{}}></ActivityIndicator> : ""}
            </Text>
          </View> : ""
        }
+
+          <FlashMessage position="top" />
          </View>
         );
        };
