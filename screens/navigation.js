@@ -19,6 +19,8 @@ import ChatList from './ChatList';
 import BuyCoins from './Buycoins';
 import SendCoins from './SendCoins';
 import ChatScreen from './ChatScreen';
+import Accepted from './Accepted';
+import AcceptedChatScreen from './AcceptedChatscreen';
 
 const Stack = createStackNavigator();
 
@@ -26,47 +28,12 @@ export default AppStack= ()=>{
     return (
       <NavigationContainer>
         <Stack.Navigator>
-        <Stack.Screen
-          name='Login'
-          component={Login}
-          options={{header:()=>null}}
-          >
-          </Stack.Screen>
-          <Stack.Screen
-          name='Register'
-          component={Register}
-          options={{header:()=>null}}
-          >
-          </Stack.Screen>
-          
-          <Stack.Screen
-          name='Dashboard'
-          component={Dashboard}
-          options={{header:()=>null}}
-          >
-          </Stack.Screen>
-          <Stack.Screen
-          name='Profile'
-          component={Profile}
-          options={{
-            header:()=>null
-          }}
-          >
-          </Stack.Screen>
-
-          <Stack.Screen
-          name='Wallet'
-          component={Wallet}
-          options={{
-            header:()=>null
-          }}
-          >
-          </Stack.Screen>
-
-          
-          <Stack.Screen
-          name='Requirement'
-          component={Requirement}
+        <Stack.Screen name='Login' component={Login} options={{header:()=>null}} ></Stack.Screen>
+        <Stack.Screen name='Register' component={Register} options={{header:()=>null}} ></Stack.Screen>
+        <Stack.Screen name='Dashboard' component={Dashboard} options={{header:()=>null}} ></Stack.Screen>
+        <Stack.Screen name='Profile' component={Profile} options={{header:()=>null}} ></Stack.Screen>
+        <Stack.Screen name='Wallet' component={Wallet} options={{header:()=>null}} ></Stack.Screen>
+        <Stack.Screen name='Requirement' component={Requirement}
           options={{
             title: 'Search For Support',
             headerStyle: {
@@ -76,12 +43,9 @@ export default AppStack= ()=>{
             headerTitleStyle: {
             },
           }}
-          >
-          </Stack.Screen>
+          ></Stack.Screen>
 
-          <Stack.Screen
-          name='PostScreen'
-          component={PostScreen}
+          <Stack.Screen name='PostScreen' component={PostScreen}
           options={{
             title: '',
             headerStyle: {
@@ -91,12 +55,9 @@ export default AppStack= ()=>{
             headerTitleStyle: {
             },
           }}
-          >
-          </Stack.Screen>
+          ></Stack.Screen>
 
-          <Stack.Screen
-          name='Withdrawl'
-          component={Withdrawl}
+          <Stack.Screen name='Withdrawl' component={Withdrawl}
           options={{
             title: 'Withdrawl Request',
             headerStyle: {
@@ -106,89 +67,19 @@ export default AppStack= ()=>{
             headerTitleStyle: {
             },
           }}
-          >
-          </Stack.Screen>
+          ></Stack.Screen>
 
-          <Stack.Screen
-          name='Supporting'
-          component={Supporting}
-          options={{
-            header:()=>null
-          }}
-          >
-          </Stack.Screen>
-
-          <Stack.Screen
-          name='TaskDetails'
-          component={TaskDetails}
-          options={{
-            header:()=>null
-          }}
-          >
-          </Stack.Screen>
-
-          <Stack.Screen
-          name='Posted'
-          component={Posted}
-          options={{
-            header:()=>null
-          }}
-          >
-          </Stack.Screen>
-
-          <Stack.Screen
-          name='PostedTaskDetails'
-          component={PostedTaskDetails}
-          options={{
-            header:()=>null
-          }}
-          >
-          </Stack.Screen>
-
-          <Stack.Screen
-          name='CompleteTask'
-          component={CompleteTask}
-          options={{
-            header:()=>null
-          }}
-          >
-          </Stack.Screen>
-
-          <Stack.Screen
-          name='ChatList'
-          component={ChatList}
-          options={{
-            header:()=>null
-          }}
-          >
-          </Stack.Screen>
-
-          <Stack.Screen
-          name='BuyCoins'
-          component={BuyCoins}
-          options={{
-            header:()=>null
-          }}
-          >
-          </Stack.Screen>
-
-          <Stack.Screen
-          name='SendCoins'
-          component={SendCoins}
-          options={{
-            header:()=>null
-          }}
-          >
-          </Stack.Screen>
-
-          <Stack.Screen
-          name='ChatScreen'
-          component={ChatScreen}
-          options={{
-            header:()=>null
-          }}
-          >
-          </Stack.Screen>
+          <Stack.Screen name='Supporting' component={Supporting} options={{header:()=>null}}></Stack.Screen>
+          <Stack.Screen name='TaskDetails' component={TaskDetails} options={{header:()=>null}}></Stack.Screen>
+          <Stack.Screen name='Posted' component={Posted} options={{header:()=>null}}></Stack.Screen>
+          <Stack.Screen name='PostedTaskDetails' component={PostedTaskDetails} options={{header:()=>null}}></Stack.Screen>
+          <Stack.Screen name='CompleteTask' component={CompleteTask} options={{header:()=>null}}></Stack.Screen>
+          <Stack.Screen name='ChatList' component={ChatList} options={{header:()=>null}}></Stack.Screen>
+          <Stack.Screen name='BuyCoins' component={BuyCoins} options={{header:()=>null}}></Stack.Screen>
+          <Stack.Screen name='SendCoins' component={SendCoins} options={{header:()=>null}}></Stack.Screen>
+          <Stack.Screen name='ChatScreen' component={ChatScreen} options={{header:()=>null}}></Stack.Screen>
+          <Stack.Screen name='Accepted' component={Accepted} options={{header:()=>null}}></Stack.Screen>
+          <Stack.Screen name='AcceptedChatScreen' component={AcceptedChatScreen} options={{header:()=>null}}></Stack.Screen>
 
         </Stack.Navigator>
       </NavigationContainer>

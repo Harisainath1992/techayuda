@@ -16,7 +16,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import { BASE_URL } from './constants';
 
 
-function ChatScreen({navigation,route}) {
+function AcceptedChatScreen({navigation,route}) {
     const {item}=route.params;
     const [loggedinusername,setLoggedinUsername]=useState();
     const [loggedinmobile,setLoggedinMobile]=useState();
@@ -72,7 +72,7 @@ function ChatScreen({navigation,route}) {
             setloginid(value);
 
             axios.post(BASE_URL+"getChat.php", {
-              acceptedTask: item.id,
+              acceptedTask: item.acceptedId,
             }, {
               headers: {
                 
@@ -124,6 +124,10 @@ function ChatScreen({navigation,route}) {
 
 
     function downloadFile(fileUrl){
+        showMessage({
+            message: "Attachment is downloading...",
+            type: "info",
+          });
       setDownload(true)
       // File URL which we want to download
       let FILE_URL = fileUrl;   
@@ -155,7 +159,10 @@ function ChatScreen({navigation,route}) {
           //console.log('res -> ', JSON.stringify(res));
           var finalres=JSON.stringify(res);
           console.log(JSON.parse(finalres).data);
-          
+          showMessage({
+            message: "Attachment downloaded...",
+            type: "info",
+          });
           setDownload(false)
         });
     };
@@ -164,37 +171,37 @@ function ChatScreen({navigation,route}) {
 
     const renderItem = ({ item }) => {
   
-      return( 
-      <View style={{}}>
-       {item.chatType==1 ? 
-       <View style={{width:"100%",padding:5}}>
-         <Text style={[item.user_id==loginid ? styles.chatContentHeader : styles.chatContentHeaderAdmin]}>{item.user_id==loginid ? "You" : item.Consultant_Name} <Text style={{fontSize:8,alignContent:"center",alignItems:"center",justifyContent:"center",color:"#BBBBBB"}}> {formatDate(item.created_at)}</Text></Text>
-         
-         <View style={[item.user_id==loginid ? styles.chatContent : styles.chatContentAdmin,{}]}>
-         <Text style={[item.user_id==loginid ? styles.chatContentColor : styles.chatContentAdminColor]}> {item.chatContent}</Text>
-         </View>
-         {/* <View style={{ borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth,}}/> */}
-       </View> : ""}
-     
-       {item.chatType==2 ? 
+        return( 
+        <View style={{}}>
+         {item.chatType==1 ? 
          <View style={{width:"100%",padding:5}}>
-         <Text style={[item.user_id==loginid ? styles.chatContentHeader : styles.chatContentHeaderAdmin]}>{item.user_id==loginid ? "You" : item.Consultant_Name} <Text style={{fontSize:8,alignContent:"center",alignItems:"center",justifyContent:"center",color:"#BBBBBB"}}> {formatDate(item.created_at)}</Text></Text>
-         <View style={[item.user_id==loginid ? styles.chatContent : styles.chatContentAdmin,{}]}>
-         <TouchableOpacity onPress={()=>downloadFile(item.chatContent)}>
-         <Text style={item.user_id==loginid ? styles.chatContent : styles.chatContentAdmin}> 
-         <FontAwesome5 name="file-download" size={40} color="#191820" style={{margin:10,fontWeight:'normal',}}/>
-         {download ? <ActivityIndicator color={"#191820"} sytle={{}}></ActivityIndicator> : ""}
-         </Text>
-         </TouchableOpacity> 
-         </View>
-         {/* <View style={{ borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth,}}/> */}
-       </View> : ""
-     }
+           <Text style={[item.user_id==loginid ? styles.chatContentHeader : styles.chatContentHeaderAdmin]}>{item.user_id==loginid ? "You" : item.Consultant_Name} <Text style={{fontSize:8,alignContent:"center",alignItems:"center",justifyContent:"center",color:"#BBBBBB"}}> {formatDate(item.created_at)}</Text></Text>
+           
+           <View style={[item.user_id==loginid ? styles.chatContent : styles.chatContentAdmin,{}]}>
+           <Text style={[item.user_id==loginid ? styles.chatContentColor : styles.chatContentAdminColor]}> {item.chatContent}</Text>
+           </View>
+           {/* <View style={{ borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth,}}/> */}
+         </View> : ""}
+       
+         {item.chatType==2 ? 
+           <View style={{width:"100%",padding:5}}>
+           <Text style={[item.user_id==loginid ? styles.chatContentHeader : styles.chatContentHeaderAdmin]}>{item.user_id==loginid ? "You" : item.Consultant_Name} <Text style={{fontSize:8,alignContent:"center",alignItems:"center",justifyContent:"center",color:"#BBBBBB"}}> {formatDate(item.created_at)}</Text></Text>
+           <View style={[item.user_id==loginid ? styles.chatContent : styles.chatContentAdmin,{}]}>
+           <TouchableOpacity onPress={()=>downloadFile(item.chatContent)}>
+           <Text style={item.user_id==loginid ? styles.chatContent : styles.chatContentAdmin}> 
+           <FontAwesome5 name="file-download" size={40} color="#191820" style={{margin:10,fontWeight:'normal',}}/>
+           {download ? <ActivityIndicator color={"#191820"} sytle={{}}></ActivityIndicator> : ""}
+           </Text>
+           </TouchableOpacity> 
+           </View>
+           {/* <View style={{ borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth,}}/> */}
+         </View> : ""
+       }
 
-        
-       </View>
-      );
-     };
+          
+         </View>
+        );
+       };
 
        useFocusEffect(
         useCallback(() => {
@@ -355,7 +362,7 @@ function ChatScreen({navigation,route}) {
       }}>
         
         
-        <MaterialCommunityIcons name="arrow-left-thin" size={40} color="white" onPress={() => navigation.navigate('ChatList',{item})} style={{marginTop:20,marginLeft:10,fontWeight:'normal',}}/>
+        <MaterialCommunityIcons name="arrow-left-thin" size={40} color="white" onPress={() => navigation.navigate('Accepted')} style={{marginTop:20,marginLeft:10,fontWeight:'normal',}}/>
 
        <View  
       style={{
@@ -406,7 +413,7 @@ function ChatScreen({navigation,route}) {
         </View>
 
        
-
+        <FlashMessage position="top" />
         </View>
 
     );
@@ -458,70 +465,70 @@ tagLine:{
     justifyContent:'center'
 },
 pressableButton:{
-  alignItems: 'center',
-  justifyContent:'center',
-  height:40,
-  width:"99%",
-  borderRadius:30,
-  marginRight:5,
-  marginBottom:40,
-  borderColor:'#191820',
-  borderWidth:1,
-},
-loginText:{
-  fontFamily:'Lato_400Regular',
-  fontWeight:'bold',
-  color:"#191820",
-  elevation: 10,
-},
-chatContent:{
-  padding:5,
-  borderRadius:8,
-  fontSize:16,
-  backgroundColor:"#ffffff",
-  color:"#000000",
-  width:"100%"
-},
-chatContentAdmin:{
-  padding:5,
-  borderRadius:8,
-  fontSize:16,
-  width:"100%",
-  alignContent:'flex-end',
-  alignItems:'flex-end',
-},
-chatContentHeader:{
-  padding:0,
-  borderRadius:8,
-  fontWeight:'bold',
-},
-chatContentHeaderAdmin:{
-  padding:0,
-  borderRadius:8,
-  fontWeight:'bold',
-  alignContent:'flex-end',
-  alignItems:'flex-end',
-  textAlign:'right'
-},
-chatContentColor:{
-  color:"#000000"
-},
-chatContentAdminColor:{
-  color:"#000000"
-},
-input: {
-  marginTop:2,
-  borderWidth: 1,
-  paddingLeft: 5,
-  paddingTop: 5,
-  paddingBottom: 5,
-  borderColor:'#191820',
-  color:"#191820",
-  fontFamily:'Lato_400Regular',
-  fontWeight:'600',
-  borderRadius:6,
-  backgroundColor:'#d5edf5',
-},
+    alignItems: 'center',
+    justifyContent:'center',
+    height:40,
+    width:"99%",
+    borderRadius:30,
+    marginRight:5,
+    marginBottom:40,
+    borderColor:'#191820',
+    borderWidth:1,
+  },
+  loginText:{
+    fontFamily:'Lato_400Regular',
+    fontWeight:'bold',
+    color:"#191820",
+    elevation: 10,
+  },
+  chatContent:{
+    padding:5,
+    borderRadius:8,
+    fontSize:16,
+    backgroundColor:"#ffffff",
+    color:"#000000",
+    width:"100%"
+  },
+  chatContentAdmin:{
+    padding:5,
+    borderRadius:8,
+    fontSize:16,
+    width:"100%",
+    alignContent:'flex-end',
+    alignItems:'flex-end',
+  },
+  chatContentHeader:{
+    padding:0,
+    borderRadius:8,
+    fontWeight:'bold',
+  },
+  chatContentHeaderAdmin:{
+    padding:0,
+    borderRadius:8,
+    fontWeight:'bold',
+    alignContent:'flex-end',
+    alignItems:'flex-end',
+    textAlign:'right'
+  },
+  chatContentColor:{
+    color:"#000000"
+  },
+  chatContentAdminColor:{
+    color:"#000000"
+  },
+  input: {
+    marginTop:2,
+    borderWidth: 1,
+    paddingLeft: 5,
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderColor:'#191820',
+    color:"#191820",
+    fontFamily:'Lato_400Regular',
+    fontWeight:'600',
+    borderRadius:6,
+    backgroundColor:'#d5edf5',
+  },
 });
 
-export default ChatScreen;
+export default AcceptedChatScreen;
