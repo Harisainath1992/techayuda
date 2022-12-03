@@ -93,6 +93,10 @@ function ChatList({navigation,route}) {
     }
     
     }
+
+    const assignTask = (item) => {
+        navigation.navigate('AssignTask',{item});
+    }
     const ItemRender = ({ item,index }) => (
         <View style={styles.MainContainer}>
                     <View style={styles.CreditNote}>
@@ -108,7 +112,7 @@ function ChatList({navigation,route}) {
                         </TouchableOpacity>
                         </Text>
                     <Text style={styles.CoinsText}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=>assignTask(item)}>
                             <FontAwesome5 name="check-circle" size={25} color="#191820" style={{}}/>
                         </TouchableOpacity>
                     </Text>

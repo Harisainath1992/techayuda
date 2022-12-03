@@ -21,6 +21,7 @@ import SendCoins from './SendCoins';
 import ChatScreen from './ChatScreen';
 import Accepted from './Accepted';
 import AcceptedChatScreen from './AcceptedChatscreen';
+import AssignTask from './AssignTask';
 
 const Stack = createStackNavigator();
 
@@ -80,6 +81,7 @@ export default AppStack= ()=>{
           <Stack.Screen name='ChatScreen' component={ChatScreen} options={{header:()=>null}}></Stack.Screen>
           <Stack.Screen name='Accepted' component={Accepted} options={{header:()=>null}}></Stack.Screen>
           <Stack.Screen name='AcceptedChatScreen' component={AcceptedChatScreen} options={{header:()=>null}}></Stack.Screen>
+          <Stack.Screen name='AssignTask' component={AssignTask} options={{header:()=>null}}></Stack.Screen>
 
         </Stack.Navigator>
       </NavigationContainer>
