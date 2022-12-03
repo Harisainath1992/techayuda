@@ -155,8 +155,8 @@ function Accepted({navigation}) {
                 >
                     
                    
-                    <View style={{position:'absolute',left:20,width:"40%",}}>
-                    <Text style={[styles.tagLine,styles.commonTextFeatures]}>Active Task's</Text>
+                    <View style={{position:'absolute',left:20,width:"60%",}}>
+                    <Text style={[styles.tagLine,styles.commonTextFeatures]}>Accepted Requirements</Text>
                         <Text style={[styles.welcomeText]}>
                         <FontAwesome5 name="tasks" size={20} color="white" style={[styles.commonTextFeatures,{}]}/> {taskCount}
                         </Text>
