@@ -123,7 +123,7 @@ function AssignTask({navigation,route}) {
         flex:1,
       }}>
         <TouchableOpacity>
-        <MaterialCommunityIcons name="arrow-left-thin" size={40} color="white" onPress={() => navigation.navigate('ChatList')} style={{margin:20,fontWeight:'normal',}}/>
+        <MaterialCommunityIcons name="arrow-left-thin" size={40} color="white" onPress={() => navigation.goBack()} style={{margin:20,fontWeight:'normal',}}/>
         </TouchableOpacity>
         
         <View

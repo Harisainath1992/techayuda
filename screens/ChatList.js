@@ -99,23 +99,28 @@ function ChatList({navigation,route}) {
     }
     const ItemRender = ({ item,index }) => (
         <View style={styles.MainContainer}>
-                    <View style={styles.CreditNote}>
-                    <Text style={styles.TransIconText}>{item.sno}</Text>
+                    <View style={[styles.CreditNote,]}>
+                    <Text style={[styles.TransIconText,{color:item.color}]}>{item.sno}</Text>
                     </View>
                     <View style={{width:"50%"}}>
-                    <Text style={styles.TransferContent}>{item.name}</Text>
+                    <Text style={[styles.TransferContent,{color:item.color}]}>{item.name}</Text>
                     </View>
                 <View style={{width:"40%",alignContent:'center',alignItems:'center',justifyContent:'center',marginTop:-10,flexDirection:'row'}}>
                     <Text style={[styles.CoinsText,{marginRight:25}]}>
                         <TouchableOpacity onPress={() => navigation.navigate('ChatScreen',{item})}>
-                            <MaterialCommunityIcons name="chat" size={30} color="#191820" style={{}}/>
+                            <MaterialCommunityIcons name="chat" size={30} color="#191820" style={{color:item.color}}/>
                         </TouchableOpacity>
                         </Text>
+                    {item.assigned ? 
+                    <Text style={[styles.CoinsText,{color:item.color}]}>
+                        <FontAwesome5 name="check-circle" size={25} color="#191820" style={{color:item.color}}/>
+                    </Text> : 
                     <Text style={styles.CoinsText}>
                         <TouchableOpacity onPress={()=>assignTask(item)}>
-                            <FontAwesome5 name="check-circle" size={25} color="#191820" style={{}}/>
+                            <FontAwesome5 name="check-circle" size={25} color="#191820" style={{color:item.color}}/>
                         </TouchableOpacity>
-                    </Text>
+                    </Text>}
+
                     </View>
             </View>
       );
